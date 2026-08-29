@@ -21,12 +21,12 @@ app.post('/api/chat', async (req, res) => {
         
         const data = await apiResponse.json();
         
-        // Железобетонное извлечение текста из ответа Google API с проверкой существования ячеек
+        // Точное извлечение текста с индексами [0] для массивов Google API
         if (data && data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
             const reply = data.candidates[0].content.parts[0].text;
             res.json({ reply });
         } else {
-            res.json({ reply: "Извините, сэр. Формат данных со спутника изменился. Попробуйте еще раз." });
+            res.json({ reply: "Извините, сэр. Произошел сбой расшифровки данных со спутника. Попробуйте еще раз." });
         }
     } catch (err) {
         console.error(err);
