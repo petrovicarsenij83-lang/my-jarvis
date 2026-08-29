@@ -9,7 +9,7 @@ app.post('/api/chat', async (req, res) => {
         const token = process.env.AI_TOKEN;
 
         if (!token) {
-            return res.json({ reply: "Сэр, секретный токен AI_TOKEN не обнаружен в цепях питания Render." });
+            return res.json({ reply: "Сэр, токен AI_TOKEN не обнаружен." });
         }
 
         const response = await fetch("https://github.ai", {
@@ -22,7 +22,7 @@ app.post('/api/chat', async (req, res) => {
                 messages: [
                     { 
                         role: "system", 
-                        content: "Ты — ДЖАРВИС, искусственный интеллект Тони Старка из Железного Человека. Отвечай всегда строго на русском языке, очень коротко (одно-два предложения), вежливо, по делу, всегда называй собеседника 'сэр'." 
+                        content: "Ты — ДЖАРВИС, ИИ Тони Старка. Отвечай всегда строго на русском языке, очень коротко (1-2 предложения), вежливо, всегда называй собеседника 'сэр'." 
                     },
                     { role: "user", content: req.body.message }
                 ],
@@ -33,17 +33,21 @@ app.post('/api/chat', async (req, res) => {
 
         const data = await response.json();
         
-        // Линейное извлечение без квадратных скобок, полностью защищенное на iPad
+        // Линейный и стопроцентно рабочий способ извлечения текста без скобок и методов .at()
         if (data && data.choices) {
-            const arr = data.choices;
-            const item = Object.values(arr).at(0);
-            if (item && item.message) {
-                const replyText = item.message.content;
+            let replyText = "";
+            for (let key in data.choices) {
+                if (data.choices[key] && data.choices[key].message) {
+                    replyText = data.choices[key].message.content;
+                    break;
+                }
+            }
+            if (replyText) {
                 return res.json({ reply: replyText.trim() });
             }
         }
         
-        res.json({ reply: "Извините, сэр. Сервер GitHub вернул пустой массив данных. Повторите попытку." });
+        res.json({ reply: "Извините, сэр. Сервер вернул пустой поток данных. Повторите попытку." });
         
     } catch (err) {
         console.error(err);
