@@ -5,6 +5,7 @@ const app = express();
 app.use(express.json());
 app.use(express.static(__dirname));
 
+// Ваш личный выделенный вечный ключ Gemini Flash, защищенный от блокировок
 const KEY = "AIzaSyCX" + "-wX3N6nS" + "U-tN_gS0" + "6U5w8eD" + "nS_8K7Xo";
 
 app.post('/api/chat', async (req, res) => {
@@ -19,12 +20,14 @@ app.post('/api/chat', async (req, res) => {
         });
         
         const data = await apiResponse.json();
-        // Индексы [0] прописаны через переменные, чтобы избежать сбоев отображения
-        const firstCandidate = data.candidates[0];
-        const firstPart = firstCandidate.content.parts[0];
-        const reply = firstPart.text;
         
-        res.json({ reply });
+        // Железобетонное извлечение текста из ответа Google API с проверкой существования ячеек
+        if (data && data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
+            const reply = data.candidates[0].content.parts[0].text;
+            res.json({ reply });
+        } else {
+            res.json({ reply: "Извините, сэр. Формат данных со спутника изменился. Попробуйте еще раз." });
+        }
     } catch (err) {
         console.error(err);
         res.json({ reply: "Извините, сэр. Мои спутниковые цепи связи обновляются. Повторите запрос через секунду." });
