@@ -3,293 +3,182 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>J.A.R.V.I.S.</title>
 
 <style>
-:root {
-    --bg: #060d1a;
-    --main: #00e5ff;
-    --glow: rgba(0,229,255,.4);
-    --panel: rgba(0,15,30,.65);
-    --border: #00e5ff;
-}
-
-.theme-mark1 {
-    --bg:#15181c;
-    --main:#e0e0e0;
-    --glow:rgba(255,255,255,.2);
-    --panel:rgba(40,45,50,.65);
-    --border:#777;
-}
-
-.theme-mark2 {
-    --bg:#0f141d;
-    --main:#a4c2f4;
-    --glow:rgba(164,194,244,.5);
-    --panel:rgba(20,30,45,.65);
-    --border:#a4c2f4;
-}
-
-.theme-mark3 {
-    --bg:#220505;
-    --main:#ffcc00;
-    --glow:rgba(255,204,0,.4);
-    --panel:rgba(80,10,10,.65);
-    --border:#ff3333;
-}
-
-.theme-mark50 {
-    --bg:#1a020d;
-    --main:#00ffcc;
-    --glow:rgba(0,255,204,.5);
-    --panel:rgba(60,5,25,.65);
-    --border:#ff0055;
-}
-
 * {
-    box-sizing:border-box;
+    box-sizing: border-box;
 }
 
 body {
+    margin: 0;
+    min-height: 100vh;
     background:
-        radial-gradient(circle at center, rgba(0,229,255,.08), transparent 45%),
-        var(--bg);
+        radial-gradient(circle at center, #073c78 0%, #031b46 40%, #010b20 100%);
+    color: #e9fbff;
+    font-family: Arial, Helvetica, sans-serif;
 
-    color:var(--main);
-    font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-
-    min-height:100vh;
-    margin:0;
-    padding:20px;
-
-    overflow:hidden;
-    transition:.4s;
+    padding: 20px;
 }
 
-.control-panel {
-    position:absolute;
-    top:20px;
-    right:20px;
-
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-
-    background:rgba(0,0,0,.45);
-    padding:12px;
-
-    border:1px solid var(--main);
-    border-radius:8px;
-
-    box-shadow:0 0 15px var(--glow);
+.container {
+    width: min(900px, 100%);
+    text-align: center;
 }
 
-.control-panel label {
-    font-size:10px;
-    font-weight:bold;
-    letter-spacing:1px;
-}
+.logo {
+    width: 190px;
+    height: 190px;
 
-select {
-    background:#000;
-    color:var(--main);
+    margin: 0 auto 25px;
 
-    border:1px solid var(--main);
-    border-radius:4px;
+    border: 3px solid #00eaff;
+    border-radius: 50%;
 
-    padding:6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    outline:none;
-}
-
-.custom-color-row {
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-input[type="color"] {
-    width:28px;
-    height:28px;
-    border:0;
-    background:transparent;
-}
-
-.core {
-    width:140px;
-    height:140px;
-
-    border:3px solid var(--main);
-    border-radius:50%;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    font-weight:bold;
-    letter-spacing:3px;
-
-    cursor:pointer;
+    color: #00eaff;
+    font-size: 27px;
+    font-weight: bold;
+    letter-spacing: 7px;
 
     box-shadow:
-        0 0 25px var(--glow),
-        inset 0 0 25px rgba(0,229,255,.05);
+        0 0 15px #00eaff,
+        0 0 40px rgba(0, 234, 255, 0.6),
+        inset 0 0 30px rgba(0, 234, 255, 0.15);
 
-    text-shadow:0 0 12px var(--main);
-
-    transition:.3s;
-
-    user-select:none;
-}
-
-.core:hover {
-    transform:scale(1.04);
-}
-
-.listening {
-    animation:pulse 1s infinite alternate;
-
-    border-color:#ff0055 !important;
-    color:#ff0055 !important;
-
-    box-shadow:
-        0 0 50px #ff0055 !important;
+    animation: pulse 2.5s infinite;
 }
 
 @keyframes pulse {
-    from { transform:scale(1); }
-    to { transform:scale(1.08); }
+    0%, 100% {
+        box-shadow:
+            0 0 15px #00eaff,
+            0 0 40px rgba(0, 234, 255, 0.5);
+    }
+
+    50% {
+        box-shadow:
+            0 0 25px #00eaff,
+            0 0 70px rgba(0, 234, 255, 0.8);
+    }
 }
 
 .status {
-    margin-top:15px;
-    margin-bottom:15px;
-
-    font-size:11px;
-    letter-spacing:2px;
-
-    text-align:center;
+    font-size: 18px;
+    letter-spacing: 4px;
+    margin-bottom: 25px;
+    color: #00eaff;
 }
 
-#log {
-    width:90%;
-    max-width:600px;
+.chat {
+    height: 430px;
+    overflow-y: auto;
 
-    height:260px;
+    padding: 25px;
 
-    border:1px solid rgba(255,255,255,.15);
+    border: 1px solid rgba(0, 234, 255, 0.5);
+    border-radius: 14px;
 
-    background:var(--panel);
+    background: rgba(2, 15, 40, 0.65);
 
-    padding:15px;
+    box-shadow:
+        0 0 25px rgba(0, 234, 255, 0.15);
 
-    overflow-y:auto;
-
-    border-radius:8px;
-
-    backdrop-filter:blur(8px);
-
-    box-shadow:0 0 20px rgba(0,0,0,.3);
+    text-align: left;
 }
 
-.u-line {
-    color:#fff;
-    margin-bottom:8px;
+.message {
+    margin-bottom: 22px;
+    line-height: 1.5;
+    font-size: 18px;
 }
 
-.j-line {
-    color:var(--main);
-    font-weight:bold;
-    margin-bottom:14px;
-
-    text-shadow:0 0 5px var(--glow);
+.jarvis {
+    color: #00eaff;
+    font-weight: bold;
 }
 
-.error-line {
-    color:#ff4466;
-    font-weight:bold;
-    margin-bottom:14px;
+.user {
+    color: white;
+    font-weight: bold;
+}
+
+.system {
+    color: #ff4f91;
+    font-weight: bold;
 }
 
 .input-area {
-    display:flex;
-
-    width:90%;
-    max-width:600px;
-
-    gap:10px;
-
-    margin-top:15px;
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
 }
 
-input[type="text"] {
-    flex:1;
+input {
+    flex: 1;
 
-    background:rgba(0,0,0,.5);
+    padding: 18px;
 
-    border:1px solid var(--border);
+    border-radius: 10px;
+    border: 2px solid #00eaff;
 
-    color:white;
+    background: rgba(0, 0, 0, 0.45);
+    color: white;
 
-    padding:12px;
+    font-size: 18px;
+    outline: none;
 
-    border-radius:5px;
-
-    font-size:15px;
-
-    outline:none;
-}
-
-input[type="text"]:focus {
-    box-shadow:0 0 12px var(--glow);
+    box-shadow: 0 0 15px rgba(0, 234, 255, 0.3);
 }
 
 button {
-    border:none;
-    border-radius:5px;
+    padding: 0 30px;
 
-    padding:12px 16px;
+    border: none;
+    border-radius: 10px;
 
-    font-weight:bold;
+    background: #00eaff;
+    color: #00233b;
 
-    cursor:pointer;
+    font-size: 18px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow: 0 0 20px rgba(0, 234, 255, 0.6);
 }
 
-.send-btn {
-    background:var(--main);
-    color:#06101a;
+button:disabled {
+    opacity: 0.5;
+    cursor: wait;
 }
 
-.send-btn:disabled {
-    opacity:.5;
-    cursor:not-allowed;
-}
+@media (max-width: 600px) {
 
-@media(max-width:600px) {
-
-    .control-panel {
-        top:10px;
-        right:10px;
-        transform:scale(.85);
-        transform-origin:top right;
+    .logo {
+        width: 140px;
+        height: 140px;
+        font-size: 20px;
     }
 
-    .core {
-        width:120px;
-        height:120px;
-    }
-
-    #log {
-        height:220px;
+    .chat {
+        height: 400px;
     }
 
     .input-area {
-        width:95%;
+        flex-direction: column;
+    }
+
+    button {
+        height: 55px;
     }
 }
 </style>
@@ -297,503 +186,149 @@ button {
 
 <body>
 
-<div class="control-panel">
+<div class="container">
 
-    <label>ГОТОВАЯ БРОНЯ:</label>
+    <div class="logo">
+        JARVIS
+    </div>
 
-    <select id="armor-select">
+    <div class="status" id="status">
+        СИСТЕМА СВЯЗИ ГОТОВА
+    </div>
 
-        <option value="default">
-            J.A.R.V.I.S. СТАНДАРТ
-        </option>
+    <div class="chat" id="chat">
 
-        <option value="mark1">
-            MARK I (ПЕЩЕРА)
-        </option>
+        <div class="message jarvis">
+            Джарвис: Система J.A.R.V.I.S. активирована, сэр.
+            Центральный интеллект готов к работе.
+        </div>
 
-        <option value="mark2">
-            MARK II (ХРОМ)
-        </option>
+    </div>
 
-        <option value="mark3">
-            MARK III (КЛАССИКА)
-        </option>
-
-        <option value="mark50">
-            MARK L (НАНО)
-        </option>
-
-    </select>
-
-    <div class="custom-color-row">
-
-        <label>СВОЙ ЦВЕТ:</label>
+    <div class="input-area">
 
         <input
-            type="color"
-            id="color-picker"
-            value="#00e5ff"
+            id="message"
+            type="text"
+            placeholder="Написать Джарвису..."
+            autocomplete="off"
         >
 
+        <button id="send">
+            ВВОД
+        </button>
+
     </div>
 
 </div>
-
-
-<div
-    class="core"
-    id="voice-btn"
->
-    JARVIS
-</div>
-
-
-<div
-    class="status"
-    id="status"
->
-    СИСТЕМА СВЯЗИ ГОТОВА
-</div>
-
-
-<div id="log">
-
-    <div class="j-line">
-        Джарвис: Система J.A.R.V.I.S. активирована, сэр.
-        Центральный интеллект готов к работе.
-    </div>
-
-</div>
-
-
-<div class="input-area">
-
-    <input
-        type="text"
-        id="user-input"
-        placeholder="Написать Джарвису..."
-        autocomplete="off"
-    >
-
-    <button
-        class="send-btn"
-        id="send-btn"
-    >
-        ВВОД
-    </button>
-
-</div>
-
 
 <script>
 
-const status =
-    document.getElementById("status");
+const input = document.getElementById("message");
+const button = document.getElementById("send");
+const chat = document.getElementById("chat");
+const status = document.getElementById("status");
 
-const log =
-    document.getElementById("log");
+function addMessage(text, type) {
 
-const userInput =
-    document.getElementById("user-input");
+    const div = document.createElement("div");
 
-const sendBtn =
-    document.getElementById("send-btn");
+    div.className = "message " + type;
 
-const voiceBtn =
-    document.getElementById("voice-btn");
+    div.textContent = text;
 
-const armorSelect =
-    document.getElementById("armor-select");
+    chat.appendChild(div);
 
-const colorPicker =
-    document.getElementById("color-picker");
-
-
-// ================================
-// ЗВУК
-// ================================
-
-function unlockAudio() {
-
-    if ("speechSynthesis" in window) {
-
-        const u =
-            new SpeechSynthesisUtterance("");
-
-        window.speechSynthesis.speak(u);
-    }
+    chat.scrollTop = chat.scrollHeight;
 }
 
+async function sendMessage() {
 
-function speak(text) {
+    const message = input.value.trim();
 
-    if (!("speechSynthesis" in window))
-        return;
+    if (!message) return;
 
-    window.speechSynthesis.cancel();
+    addMessage("Вы: " + message, "user");
 
-    const speech =
-        new SpeechSynthesisUtterance(text);
+    input.value = "";
 
-    speech.lang = "ru-RU";
-    speech.rate = 1;
-    speech.pitch = 0.9;
+    button.disabled = true;
+    input.disabled = true;
 
-    window.speechSynthesis.speak(speech);
-}
-
-
-// ================================
-// ДОБАВЛЕНИЕ СООБЩЕНИЙ
-// ================================
-
-function addMessage(type, text) {
-
-    const div =
-        document.createElement("div");
-
-    if (type === "user") {
-
-        div.className = "u-line";
-        div.textContent = "Вы: " + text;
-
-    } else if (type === "jarvis") {
-
-        div.className = "j-line";
-        div.textContent = "Джарвис: " + text;
-
-    } else {
-
-        div.className = "error-line";
-        div.textContent = "Система: " + text;
-    }
-
-    log.appendChild(div);
-
-    log.scrollTop =
-        log.scrollHeight;
-}
-
-
-// ================================
-// ГЛАВНАЯ ФУНКЦИЯ ИИ
-// ================================
-
-async function askJarvis(text) {
-
-    text = text.trim();
-
-    if (!text)
-        return;
-
-    unlockAudio();
-
-    addMessage("user", text);
-
-    userInput.value = "";
-
-    sendBtn.disabled = true;
-
-    status.innerText =
-        "СВЯЗЬ С ЦЕНТРАЛЬНЫМ ИНТЕЛЛЕКТОМ...";
+    status.textContent = "ЦЕНТРАЛЬНЫЙ ИНТЕЛЛЕКТ ОБРАБАТЫВАЕТ ЗАПРОС...";
 
     try {
 
-        const response =
-            await fetch("/api/chat", {
+        const response = await fetch("/api/chat", {
 
-                method: "POST",
+            method: "POST",
 
-                headers: {
-                    "Content-Type":
-                        "application/json"
-                },
+            headers: {
+                "Content-Type": "application/json"
+            },
 
-                body: JSON.stringify({
-                    message: text
-                })
+            body: JSON.stringify({
+                message: message
+            })
 
-            });
+        });
 
-
-        const data =
-            await response.json();
-
+        const data = await response.json();
 
         if (!response.ok) {
 
             throw new Error(
-                data.error ||
-                "Сервер вернул ошибку"
+                data?.error ||
+                "Сервер вернул ошибку."
             );
+
         }
 
-
-        if (!data.reply) {
+        if (!data.answer) {
 
             throw new Error(
-                "ИИ не вернул ответ"
+                "ИИ не вернул ответ."
             );
+
         }
 
-
         addMessage(
-            "jarvis",
-            data.reply
+            "Джарвис: " + data.answer,
+            "jarvis"
         );
 
-
-        status.innerText =
-            "СИСТЕМА СВЯЗИ ГОТОВА";
-
-
-        speak(data.reply);
-
+        status.textContent = "СИСТЕМА СВЯЗИ ГОТОВА";
 
     } catch (error) {
 
         console.error(error);
 
         addMessage(
-            "error",
-            "Сэр, произошла ошибка соединения с центральным интеллектом: " +
-            error.message
+            "Система: Сэр, произошла ошибка соединения с центральным интеллектом: " +
+            error.message,
+            "system"
         );
 
-        status.innerText =
-            "ОШИБКА СИСТЕМЫ";
+        status.textContent = "ОШИБКА СИСТЕМЫ";
 
     } finally {
 
-        sendBtn.disabled = false;
+        button.disabled = false;
+        input.disabled = false;
 
-        userInput.focus();
+        input.focus();
     }
 }
 
+button.addEventListener("click", sendMessage);
 
-// ================================
-// КНОПКА ВВОДА
-// ================================
+input.addEventListener("keydown", function(event) {
 
-sendBtn.addEventListener(
-    "click",
-    () => {
-
-        askJarvis(
-            userInput.value
-        );
-
+    if (event.key === "Enter") {
+        sendMessage();
     }
-);
 
-
-// ================================
-// ENTER
-// ================================
-
-userInput.addEventListener(
-    "keydown",
-    event => {
-
-        if (event.key === "Enter") {
-
-            event.preventDefault();
-
-            askJarvis(
-                userInput.value
-            );
-        }
-
-    }
-);
-
-
-// ================================
-// ГОЛОС
-// ================================
-
-const SpeechRecognition =
-    window.SpeechRecognition ||
-    window.webkitSpeechRecognition;
-
-
-if (SpeechRecognition) {
-
-    const recognition =
-        new SpeechRecognition();
-
-    recognition.lang = "ru-RU";
-
-    recognition.interimResults = false;
-
-    recognition.continuous = false;
-
-
-    voiceBtn.addEventListener(
-        "click",
-        () => {
-
-            unlockAudio();
-
-            try {
-
-                recognition.start();
-
-                voiceBtn.classList.add(
-                    "listening"
-                );
-
-                status.innerText =
-                    "СЛУШАЮ ВАС, СЭР...";
-
-            } catch (error) {
-
-                console.log(error);
-
-            }
-
-        }
-    );
-
-
-    recognition.onresult =
-        event => {
-
-            const text =
-                event.results[0][0].transcript;
-
-            if (text) {
-
-                askJarvis(text);
-            }
-
-        };
-
-
-    recognition.onerror =
-        event => {
-
-            console.error(
-                "Speech error:",
-                event.error
-            );
-
-            status.innerText =
-                "ГОЛОС НЕ РАСПОЗНАН";
-
-        };
-
-
-    recognition.onend =
-        () => {
-
-            voiceBtn.classList.remove(
-                "listening"
-            );
-
-            if (
-                status.innerText ===
-                "СЛУШАЮ ВАС, СЭР..."
-            ) {
-
-                status.innerText =
-                    "СИСТЕМА СВЯЗИ ГОТОВА";
-            }
-
-        };
-
-} else {
-
-    status.innerText =
-        "ГОЛОСОВОЙ ВВОД НЕ ПОДДЕРЖИВАЕТСЯ";
-}
-
-
-// ================================
-// БРОНЯ
-// ================================
-
-armorSelect.addEventListener(
-    "change",
-    event => {
-
-        document.body.className = "";
-
-        const selected =
-            event.target.value;
-
-        if (selected !== "default") {
-
-            document.body.classList.add(
-                "theme-" + selected
-            );
-
-        } else {
-
-            document.documentElement
-                .style
-                .setProperty(
-                    "--main",
-                    "#00e5ff"
-                );
-
-            document.documentElement
-                .style
-                .setProperty(
-                    "--glow",
-                    "rgba(0,229,255,.4)"
-                );
-
-        }
-
-    }
-);
-
-
-// ================================
-// СВОЙ ЦВЕТ
-// ================================
-
-colorPicker.addEventListener(
-    "input",
-    event => {
-
-        const hex =
-            event.target.value;
-
-        armorSelect.value =
-            "default";
-
-        document.body.className = "";
-
-        document.documentElement
-            .style
-            .setProperty(
-                "--main",
-                hex
-            );
-
-
-        const r =
-            parseInt(hex.substring(1,3),16);
-
-        const g =
-            parseInt(hex.substring(3,5),16);
-
-        const b =
-            parseInt(hex.substring(5,7),16);
-
-
-        document.documentElement
-            .style
-            .setProperty(
-                "--glow",
-                `rgba(${r},${g},${b},.4)`
-            );
-
-    }
-);
+});
 
 </script>
 
