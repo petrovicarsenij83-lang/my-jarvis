@@ -1,14 +1,13 @@
 {
   "name": "jarvis-cloud",
   "version": "2.0.0",
-  "description": "J.A.R.V.I.S. AI Assistant with OpenRouter and Kokoro-RU TTS",
+  "description": "J.A.R.V.I.S. AI Assistant",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
     "express": "^4.19.2",
-    "onnxruntime-node": "^1.22.0",
-    "espeak-ng": "^1.52.0"
+    "onnxruntime-node": "^1.22.0"
   }
 }
