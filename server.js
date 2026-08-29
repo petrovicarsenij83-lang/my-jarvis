@@ -4,7 +4,6 @@ const app = express();
 app.use(express.json());
 app.use(express.static(__dirname));
 
-// Ваш официальный бесплатный токен разработчика GitHub
 const GITHUB_TOKEN = "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";
 
 app.post('/api/chat', async (req, res) => {
@@ -19,7 +18,7 @@ app.post('/api/chat', async (req, res) => {
                 messages: [
                     { 
                         role: "system", 
-                        content: "Ты — ДЖАРВИС, искусственный интеллект Тони Старка из Железного Человека. Отвечай всегда строго на русском языке, очень коротко (одно-два предложения), вежливо, по делу, всегда называй собеседника 'сэр'." 
+                        content: "Ты — ДЖАРВИС, искусственный интеллект Тони Старка. Отвечай коротко (1-2 предложения), на русском языке, называй собеседника 'сэр'." 
                     },
                     { role: "user", content: req.body.message }
                 ],
@@ -29,14 +28,22 @@ app.post('/api/chat', async (req, res) => {
         });
 
         const data = await response.json();
+        console.log("Ответ от GitHub:", JSON.stringify(data));
+
+        // Всеядный нано-сканер текста ответа
+        let finalReply = "";
         
-        // Линейное, ультра-надежное извлечение ответа из структуры GitHub/Azure API
-        const choicesList = data.choices;
-        const firstChoice = choicesList[0];
-        const messageObject = firstChoice.message;
-        const replyText = messageObject.content;
-        
-        res.json({ reply: replyText.trim() });
+        if (data && data.choices && data.choices[0] && data.choices[0].message) {
+            const msg = data.choices[0].message;
+            finalReply = msg.content || msg.text || msg.value || "";
+        }
+
+        if (finalReply) {
+            res.json({ reply: finalReply.trim() });
+        } else {
+            // Если ИИ прислал пустой объект, выводим его структуру прямо на экран для диагностики
+            res.json({ reply: "Сэр, зафиксирован неизвестный формат данных: " + JSON.stringify(data).substring(0, 50) });
+        }
     } catch (err) {
         console.error(err);
         res.json({ reply: "Извините, сэр. Мои спутниковые цепи связи обновляются. Повторите запрос через секунду." });
@@ -44,6 +51,4 @@ app.post('/api/chat', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log("Джарвис успешно запущен");
-});
+app.listen(PORT, () => { console.log("Джарвис онлайн"); });
