@@ -12,7 +12,7 @@ app.post('/api/chat', async (req, res) => {
             return res.json({ reply: "Сэр, секретный токен AI_TOKEN не обнаружен в цепях питания Render." });
         }
 
-        const response = await fetch("https://github.ai", {
+        const response = await fetch("https://models.github.ai/inference/chat/completions", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -33,17 +33,16 @@ app.post('/api/chat', async (req, res) => {
 
         const data = await response.json();
         
-        // Сверхнадежное извлечение текста через метод .at(0)
+        // Линейное пошаговое извлечение текста БЕЗ скобок и БЕЗ сложных методов
         if (data && data.choices) {
-            const arr = data.choices;
-            const item = arr.at(0);
-            if (item && item.message) {
-                const replyText = item.message.content;
-                return res.json({ reply: replyText.trim() });
+            const currentChoice = data.choices[0];
+            if (currentChoice && currentChoice.message) {
+                const textReply = currentChoice.message.content;
+                return res.json({ reply: textReply.trim() });
             }
         }
         
-        res.json({ reply: "Извините, сэр. Сеть GitHub вернула пустой поток данных. Повторите попытку." });
+        res.json({ reply: "Извините, сэр. Сервер GitHub вернул пустой массив данных. Повторите попытку." });
         
     } catch (err) {
         console.error(err);
