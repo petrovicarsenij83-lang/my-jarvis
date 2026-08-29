@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>J.A.R.V.I.S. Cloud</title>
+    <style>
+        body {
+            background-color: #060d1a; color: #00e5ff;
+            font-family: system-ui, -apple-system, sans-serif;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            height: 90vh; margin: 0; overflow: hidden;
+        }
+        .core {
+            width: 130px; height: 130px;
+            border: 3px solid #00e5ff; border-radius: 50%;
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.4);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; cursor: pointer; text-shadow: 0 0 10px #00e5ff;
+            background: rgba(0, 229, 255, 0.03); margin-bottom: 5px;
+            transition: transform 0.2s;
+        }
+        .core:active { transform: scale(0.95); }
+        .status { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 15px; text-align: center; }
+        #log {
+            width: 85%; max-width: 500px; height: 180px;
+            border: 1px solid rgba(0, 229, 255, 0.2); background: rgba(0, 15, 30, 0.6);
+            padding: 15px; overflow-y: auto; font-size: 14px; border-radius: 6px; margin-bottom: 15px;
+        }
+        .u-line { color: #fff; margin-bottom: 6px; }
+        .j-line { color: #00e5ff; margin-bottom: 12px; font-weight: bold; }
+        .input-area { display: flex; width: 85%; max-width: 500px; gap: 10px; }
+        input {
+            flex: 1; background: rgba(0, 20, 40, 0.6); border: 1px solid #00e5ff;
+            color: #fff; padding: 10px; border-radius: 4px; font-size: 14px; outline: none;
+        }
+        button {
+            background: #00e5ff; border: none; color: #060d1a;
+            padding: 10px 15px; border-radius: 4px; font-weight: bold; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="core" id="voice-btn">JARVIS</div>
+    <div class="status" id="status">НАЖМИТЕ НА КРУГ ДЛЯ ГОЛОСА ИЛИ НАПИШИТЕ ТЕКСТ</div>
+    <div id="log"></div>
+    
+    <div class="input-area">
+        <input type="text" id="user-input" placeholder="Написать Джарвису..." autocomplete="off">
+        <button id="send-btn">ВВОД</button>
+    </div>
+
+    <script>
+        const status = document.getElementById('status');
+        const log = document.getElementById('log');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const voiceBtn = document.getElementById('voice-btn');
+
+        function unlockAudioiOS() {
+            const initialSilence = new SpeechSynthesisUtterance("");
+            window.speechSynthesis.speak(initialSilence);
+        }
+
+        function audioVoice(text) {
+            window.speechSynthesis.cancel();
+            const speech = new SpeechSynthesisUtterance(text);
+            speech.lang = 'ru-RU';
+            window.speechSynthesis.speak(speech);
+        }
+
+        async function askJarvis(text) {
+            log.innerHTML += `<div class="u-line">Вы: ${text}</div>`;
+            log.scrollTop = log.scrollHeight;
+            status.innerText = "ПОДКЛЮЧЕНИЕ К СПУТНИКОВОЙ СЕТИ...";
+
+            try {
+                const response = await fetch("/api/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: text })
+                });
+
+                const data = await response.json();
+                const reply = data.reply;
+                
+                log.innerHTML += `<div class="j-line">Джарвис: ${reply}</div>`;
+                log.scrollTop = log.scrollHeight;
+                status.innerText = "СИСТЕМА СВЯЗИ ГОТОВА";
+                
+                audioVoice(reply);
+            } catch (err) {
+                status.innerText = "ОШИБКА СЕРВЕРА.";
+                console.error(err);
+            }
+        }
+
+        function handleTextInput() {
+            unlockAudioiOS();
+            const text = userInput.value.trim();
+            if (!text) return;
+            userInput.value = '';
+            askJarvis(text);
+        }
+
+        sendBtn.addEventListener('click', handleTextInput);
+        userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleTextInput(); });
+
+        const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (Speech) {
+            const rec = new Speech();
+            rec.lang = 'ru-RU';
+
+            voiceBtn.addEventListener('click', () => {
+                unlockAudioiOS();
+                try { rec.start(); status.innerText = "СЛУШАЮ ВАС, СЭР..."; } catch(e) { rec.stop(); }
+            });
+
+            rec.onresult = (e) => {
+                const speechResult = e.results.transcript;
+                if (speechResult) askJarvis(speechResult);
+            };
+
+            rec.onerror = () => { status.innerText = "ГОЛОС НЕ РАСПОЗНАН"; };
+            rec.onend = () => { if(status.innerText === "СЛУШАЮ ВАС, СЭР...") status.innerText = "СИСТЕМА СВЯЗИ ГОТОВА"; };
+        } else {
+            status.innerText = "МИКРОФОН НЕ ПОДДЕРЖИВАЕТСЯ.";
+        }
+    </script>
+</body>
+</html>
