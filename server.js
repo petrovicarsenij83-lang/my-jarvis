@@ -20,7 +20,7 @@ app.post('/api/chat', async (req, res) => {
         });
         
         const data = await apiResponse.json();
-        // Полностью исправленная строчка получения текста от Google
+        // Стопроцентно точный путь к тексту ответа Google API с индексами массивов
         const reply = data.candidates[0].content.parts[0].text;
         res.json({ reply });
     } catch (err) {
