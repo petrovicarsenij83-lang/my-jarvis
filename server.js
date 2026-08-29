@@ -4,12 +4,11 @@ const app = express();
 app.use(express.json());
 app.use(express.static(__dirname));
 
-// Наш стабильный бесплатный ключ ИИ
-const KEY = "AIzaSyCX" + "-wX3N6nS" + "U-tN_gS0" + "6U5w8eD" + "nS_8K7Xo";
-
 app.post('/api/chat', async (req, res) => {
     try {
-        const url = `https://googleapis.com{KEY}`;
+        // Строгая прямая ссылка без склеек и фигурных скобок
+        const url = "https://googleapis.com";
+        
         const response = await fetch(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -20,7 +19,7 @@ app.post('/api/chat', async (req, res) => {
         
         const data = await response.json();
         
-        // Железобетонное извлечение текста с точными скобками индексов
+        // Извлечение текста с точными скобками индексов
         const reply = data.candidates[0].content.parts[0].text;
         res.json({ reply: reply });
         
@@ -32,5 +31,5 @@ app.post('/api/chat', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log("Сервер успешно запущен на порту " + PORT);
+    console.log("Сервер успешно запущен");
 });
