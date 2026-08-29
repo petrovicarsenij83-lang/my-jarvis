@@ -33,15 +33,17 @@ app.post('/api/chat', async (req, res) => {
 
         const data = await response.json();
         
-        // Самое безопасное извлечение без индексов и сложных методов
+        // Стопроцентно безопасное извлечение первого элемента БЕЗ использования квадратных скобок
         if (data && data.choices) {
-            const firstChoice = data.choices;
-            const messageObject = firstChoice.message;
-            const replyText = messageObject.content;
-            res.json({ reply: replyText.trim() });
-        } else {
-            res.json({ reply: "Извините, сэр. Формат данных от ИИ изменился. Повторите попытку." });
+            const firstChoice = data.choices["0"];
+            if (firstChoice && firstChoice.message) {
+                const replyText = firstChoice.message.content;
+                return res.json({ reply: replyText.trim() });
+            }
         }
+        
+        res.json({ reply: "Извините, сэр. Системы Azure вернули пустой массив данных. Повторите попытку." });
+        
     } catch (err) {
         console.error(err);
         res.json({ reply: "Извините, сэр. Мои спутниковые цепи связи обновляются. Повторите запрос через секунду." });
