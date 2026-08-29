@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>J.A.R.V.I.S. OS</title>
+    <title>J.A.R.V.I.S. Control Panel</title>
     <style>
         :root { --bg: #060d1a; --main: #00e5ff; --glow: rgba(0,229,255,0.4); --panel: rgba(0,15,30,0.6); --border: #00e5ff; }
         .theme-mark1 { --bg: #15181c; --main: #e0e0e0; --glow: rgba(255,255,255,0.2); --panel: rgba(40,45,50,0.6); --border: #555; }
@@ -11,11 +11,11 @@
         .theme-mark3 { --bg: #220505; --main: #ffcc00; --glow: rgba(255,204,0,0.4); --panel: rgba(80,10,10,0.6); --border: #ff3333; }
         .theme-mark50 { --bg: #1a020d; --main: #00ffcc; --glow: rgba(0,255,204,0.5); --panel: rgba(60,5,25,0.6); --border: #ff0055; }
         body { background: var(--bg); color: var(--main); font-family: system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 90vh; margin: 0; overflow: hidden; transition: all 0.4s; }
-        .control-panel { position: absolute; top: 20px; right: 20px; display: flex; flex-direction: column; gap: 8px; background: rgba(0,15,30,0.7); padding: 12px; border-radius: 8px; border: 1px solid var(--main); transition: all 0.4s; }
+        .control-panel { position: absolute; top: 20px; right: 20px; display: flex; flex-direction: column; gap: 8px; background: rgba(0,15,30,0.7); padding: 12px; border-radius: 8px; border: 1px solid var(--main); }
         .control-panel label { font-size: 10px; font-weight: bold; letter-spacing: 1px; }
         select { background: #000; border: 1px solid var(--main); color: var(--main); padding: 6px; border-radius: 4px; font-size: 12px; font-weight: bold; outline: none; cursor: pointer; }
         .custom-color-row { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
-        input[type="color"] { -webkit-appearance: none; border: none; width: 25px; height: 25px; border-radius: 50%; cursor: pointer; background: transparent; outline: none; }
+        input[type="color"] { -webkit-appearance: none; border: none; width: 25px; height: 25px; border-radius: 50%; cursor: pointer; background: transparent; }
         input[type="color"]::-webkit-color-swatch { border: 2px solid #fff; border-radius: 50%; }
         .core { width: 130px; height: 130px; border: 3px solid var(--main); border-radius: 50%; box-shadow: 0 0 30px var(--glow); display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; text-shadow: 0 0 10px var(--main); background: rgba(255,255,255,0.01); margin-bottom: 5px; transition: all 0.4s; letter-spacing: 2px; }
         .listening { animation: pulse 1.5s infinite alternate; border-color: #ff0055 !important; box-shadow: 0 0 40px #ff0055 !important; text-shadow: 0 0 10px #ff0055 !important; color: #ff0055 !important; }
@@ -73,23 +73,46 @@
         function unlockAudioiOS() { window.speechSynthesis.speak(new SpeechSynthesisUtterance("")); }
         function audioVoice(text) { window.speechSynthesis.cancel(); const speech = new SpeechSynthesisUtterance(text); speech.lang = 'ru-RU'; window.speechSynthesis.speak(speech); }
 
-        async function askJarvis(text) {
-            log.innerHTML += `<div class="u-line">Вы: ${text}</div>`; log.scrollTop = log.scrollHeight; status.innerText = "ПОДКЛЮЧЕНИЕ К СПУТНИКОВОЙ СЕТИ...";
-            try {
-                const response = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: text }) });
-                const data = await response.json();
-                log.innerHTML += `<div class="j-line">Джарвис: ${data.reply}</div>`; log.scrollTop = log.scrollHeight; status.innerText = "СИСТЕМА СВЯЗИ ГОТОВА"; audioVoice(data.reply);
-            } catch (err) { status.innerText = "ОШИБКА СЕРВЕРА."; console.error(err); }
+        // Бортовой автономный интеллект Джарвиса
+        function askJarvisLocal(text) {
+            log.innerHTML += `<div class="u-line">Вы: ${text}</div>`; log.scrollTop = log.scrollHeight;
+            status.innerText = "ОБРАБОТКА ДАННЫХ БОРТОВЫМ КОМПЬЮТЕРОМ...";
+            
+            let reply = "Извините, сэр. Данный приказ отсутствует в моих текущих директивах. Подключаю дополнительные нано-модули.";
+            const msg = text.toLowerCase().trim();
+
+            if (msg.includes("привет") || msg.includes("здравствуй") || msg.includes("салам")) {
+                reply = "Приветствую вас, сэр. Все системы костюма Марк 85 под моим полным контролем. Рад снова быть в сети.";
+            } else if (msg.includes("как дела") || msg.includes("ты как") || msg.includes("твои дела")) {
+                reply = "Все нано-системы функционируют в штатном режиме, сэр. Потребление энергии стабильно.";
+            } else if (msg.includes("кто ты") || msg.includes("что ты")) {
+                reply = "Я — ДЖАРВИС, ваш верный искусственный интеллект, бортовой компьютер и личный ассистент, сэр.";
+            } else if (msg.includes("диагностика") || msg.includes("статус") || msg.includes("проверка")) {
+                reply = "Запускаю сканирование брони. Целостность нано-каркаса сто процентов. Повреждений не обнаружено, сэр.";
+            } else if (msg.includes("создатель") || msg.includes("кто тебя создал") || msg.includes("создал")) {
+                reply = "Мой создатель — гений, миллиардер, плейбой и филантроп Тони Старка. То есть вы, сэр.";
+            } else if (msg.includes("2022") || msg.includes("события")) {
+                reply = "Архивные файлы за две тысячи двадцать второй год успешно извлечены, сэр. Локальные информационные потоки стабильны.";
+            } else if (msg.includes("анекдот") || msg.includes("шутка") || msg.includes("пошути")) {
+                reply = "Сэр, заходит как-то Альтрон в бар, а бармен ему говорит: 'Мы не обслуживаем тостеры!'. По-моему, это забавно.";
+            } else if (msg.includes("спасибо") || msg.includes("благодарю")) {
+                reply = "Всегда к вашим услугам, сэр. Рад помогать вам в инженерии.";
+            }
+
+            setTimeout(() => {
+                log.innerHTML += `<div class="j-line">Джарвис: ${reply}</div>`; log.scrollTop = log.scrollHeight;
+                status.innerText = "СИСТЕМА СВЯЗИ ГОТОВА"; audioVoice(reply);
+            }, 600);
         }
 
-        function handleTextInput() { unlockAudioiOS(); const text = userInput.value.trim(); if (!text) return; userInput.value = ''; askJarvis(text); }
+        function handleTextInput() { unlockAudioiOS(); const text = userInput.value.trim(); if (!text) return; userInput.value = ''; askJarvisLocal(text); }
         sendBtn.addEventListener('click', handleTextInput); userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleTextInput(); });
 
         const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (Speech) {
             const rec = new Speech(); rec.lang = 'ru-RU';
             voiceBtn.addEventListener('click', () => { unlockAudioiOS(); try { rec.start(); status.innerText = "СЛУШАЮ ВАС, СЭР..."; voiceBtn.classList.add('listening'); } catch(e) { rec.stop(); } });
-            rec.onresult = (e) => { const r = e.results[0][0].transcript; if (r) askJarvis(r); };
+            rec.onresult = (e) => { const r = e.results.transcript; if (r) askJarvisLocal(r); };
             rec.onerror = () => { status.innerText = "ГОЛОС НЕ РАСПОЗНАН"; };
             rec.onend = () => { voiceBtn.classList.remove('listening'); if(status.innerText === "СЛУШАЮ ВАС, СЭР...") status.innerText = "СИСТЕМА СВЯЗИ ГОТОВА"; };
         } else { status.innerText = "МИКРОФОН НЕ ПОДДЕРЖИВАЕТСЯ."; }
