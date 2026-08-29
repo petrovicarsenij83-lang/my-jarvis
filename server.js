@@ -12,7 +12,6 @@ app.post('/api/chat', async (req, res) => {
             return res.json({ reply: "Сэр, секретный токен AI_TOKEN не обнаружен в цепях питания Render." });
         }
 
-        // ОБНОВЛЕННЫЙ ОФИЦИАЛЬНЫЙ АДРЕС ИИ GITHUB MODELS
         const response = await fetch("https://github.ai", {
             method: "POST",
             headers: {
@@ -34,16 +33,17 @@ app.post('/api/chat', async (req, res) => {
 
         const data = await response.json();
         
-        // Надежное извлечение текста, полностью защищенное от сбоев на iPad
+        // Сверхнадежное извлечение текста через метод .at(0)
         if (data && data.choices) {
-            const firstChoice = data.choices["0"] || data.choices[0];
-            if (firstChoice && firstChoice.message) {
-                const replyText = firstChoice.message.content;
+            const arr = data.choices;
+            const item = arr.at(0);
+            if (item && item.message) {
+                const replyText = item.message.content;
                 return res.json({ reply: replyText.trim() });
             }
         }
         
-        res.json({ reply: "Извините, сэр. Новая сеть вернула пустой поток данных. Повторите попытку." });
+        res.json({ reply: "Извините, сэр. Сеть GitHub вернула пустой поток данных. Повторите попытку." });
         
     } catch (err) {
         console.error(err);
@@ -53,5 +53,5 @@ app.post('/api/chat', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log("Бортовой компьютер успешно запущен на порту " + PORT);
+    console.log("Бортовой компьютер успешно запущен");
 });
