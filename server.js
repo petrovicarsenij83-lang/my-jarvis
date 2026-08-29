@@ -12,7 +12,7 @@ app.post('/api/chat', async (req, res) => {
             return res.json({ reply: "Сэр, секретный токен AI_TOKEN не обнаружен в цепях питания Render." });
         }
 
-        const response = await fetch("https://models.github.ai/inference/chat/completions", {
+        const response = await fetch("https://github.ai", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -26,19 +26,20 @@ app.post('/api/chat', async (req, res) => {
                     },
                     { role: "user", content: req.body.message }
                 ],
-                model: "meta-llama-3.1-70b-instruct",
+                model: "Phi-3-medium-128k-instruct",
                 max_tokens: 150
             })
         });
 
         const data = await response.json();
         
-        // Линейное пошаговое извлечение текста БЕЗ скобок и БЕЗ сложных методов
+        // Линейное извлечение без квадратных скобок, полностью защищенное на iPad
         if (data && data.choices) {
-            const currentChoice = data.choices[0];
-            if (currentChoice && currentChoice.message) {
-                const textReply = currentChoice.message.content;
-                return res.json({ reply: textReply.trim() });
+            const arr = data.choices;
+            const item = Object.values(arr).at(0);
+            if (item && item.message) {
+                const replyText = item.message.content;
+                return res.json({ reply: replyText.trim() });
             }
         }
         
