@@ -3,51 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>J.A.R.V.I.S. Armor Control</title>
+    <title>J.A.R.V.I.S. Custom OS</title>
     <style>
-        /* Базовые настройки тем для костюмов */
         :root {
-            --bg-color: #060d1a;
+            --bg-color: #050b14;
             --main-color: #00e5ff;
             --main-glow: rgba(0, 229, 255, 0.4);
-            --panel-bg: rgba(0, 15, 30, 0.6);
-            --input-border: #00e5ff;
-        }
-
-        /* Марк 1: Стальной / Пещерный */
-        .theme-mark1 {
-            --bg-color: #15181c;
-            --main-color: #e0e0e0;
-            --main-glow: rgba(255, 255, 255, 0.2);
-            --panel-bg: rgba(40, 45, 50, 0.6);
-            --input-border: #555555;
-        }
-
-        /* Марк 2: Хром / Серебро */
-        .theme-mark2 {
-            --bg-color: #0f141d;
-            --main-color: #a4c2f4;
-            --main-glow: rgba(164, 194, 244, 0.5);
-            --panel-bg: rgba(20, 30, 45, 0.6);
-            --input-border: #a4c2f4;
-        }
-
-        /* Марк 3: Классический Красно-Золотой */
-        .theme-mark3 {
-            --bg-color: #220505;
-            --main-color: #ffcc00;
-            --main-glow: rgba(255, 204, 0, 0.4);
-            --panel-bg: rgba(80, 10, 10, 0.6);
-            --input-border: #ff3333;
-        }
-
-        /* Марк 50: Нанотехнологичный Бордовый */
-        .theme-mark50 {
-            --bg-color: #1a020d;
-            --main-color: #00ffcc;
-            --main-glow: rgba(0, 255, 204, 0.5);
-            --panel-bg: rgba(60, 5, 25, 0.6);
-            --input-border: #ff0055;
         }
 
         body {
@@ -56,21 +17,24 @@
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
             height: 90vh; margin: 0; overflow: hidden;
-            transition: all 0.5s ease;
+            transition: color 0.3s ease;
         }
         
-        /* Выпадающий список выбора брони */
-        .selector-area {
+        /* Скрытый пульт выбора цвета */
+        .color-picker-panel {
             position: absolute; top: 20px; right: 20px;
-            display: flex; flex-direction: column; gap: 5px;
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(0, 20, 40, 0.6); padding: 8px 12px;
+            border-radius: 6px; border: 1px solid var(--main-color);
+            font-size: 11px; font-weight: bold; letter-spacing: 1px;
         }
-        .selector-area label { font-size: 10px; letter-spacing: 1px; font-weight: bold; }
-        select {
-            background: var(--bg-color); border: 1px solid var(--main-color);
-            color: var(--main-color); padding: 8px; border-radius: 4px;
-            font-size: 12px; font-weight: bold; outline: none; cursor: pointer;
-            transition: all 0.3s;
+        
+        input[type="color"] {
+            -webkit-appearance: none; border: none; width: 30px; height: 30px;
+            border-radius: 50%; cursor: pointer; background: transparent; outline: none;
         }
+        input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        input[type="color"]::-webkit-color-swatch { border: 2px solid #fff; border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
 
         .core {
             width: 130px; height: 130px;
@@ -79,11 +43,11 @@
             display: flex; align-items: center; justify-content: center;
             font-weight: bold; cursor: pointer; text-shadow: 0 0 10px var(--main-color);
             background: rgba(255, 255, 255, 0.01); margin-bottom: 5px;
-            transition: all 0.5s ease;
+            transition: border-color 0.3s, box-shadow 0.3s, text-shadow 0.3s;
             letter-spacing: 2px;
         }
         .core:active { transform: scale(0.95); }
-        .listening { animation: pulse 1.5s infinite alternate; border-color: #ff0055; box-shadow: 0 0 40px #ff0055; text-shadow: 0 0 10px #ff0055; color: #ff0055; }
+        .listening { animation: pulse 1.5s infinite alternate; border-color: #ff0055 !important; box-shadow: 0 0 40px #ff0055 !important; text-shadow: 0 0 10px #ff0055 !important; color: #ff0055 !important; }
         
         @keyframes pulse {
             0% { transform: scale(1); }
@@ -92,36 +56,29 @@
         .status { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 15px; text-align: center; }
         #log {
             width: 85%; max-width: 500px; height: 180px;
-            border: 1px solid rgba(255, 255, 255, 0.1); background: var(--panel-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 10, 25, 0.6);
             padding: 15px; overflow-y: auto; font-size: 14px; border-radius: 6px; margin-bottom: 15px;
-            transition: all 0.5s ease;
         }
         .u-line { color: #fff; margin-bottom: 6px; }
         .j-line { color: var(--main-color); margin-bottom: 12px; font-weight: bold; }
         .input-area { display: flex; width: 85%; max-width: 500px; gap: 10px; }
-        input {
-            flex: 1; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--input-border);
+        input[type="text"] {
+            flex: 1; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--main-color);
             color: #fff; padding: 10px; border-radius: 4px; font-size: 14px; outline: none;
-            transition: all 0.5s ease;
+            transition: border-color 0.3s;
         }
         button.send-btn {
             background: var(--main-color); border: none; color: #060d1a;
             padding: 10px 15px; border-radius: 4px; font-weight: bold; cursor: pointer;
-            transition: all 0.5s ease;
+            transition: background-color 0.3s;
         }
     </style>
 </head>
 <body>
 
-    <div class="selector-area">
-        <label>ИНТЕРФЕЙС БРОНИ:</label>
-        <select id="armor-select">
-            <option value="default">J.A.R.V.I.S. СТАНДАРТ</option>
-            <option value="mark1">MARK I (ПЕЩЕРА)</option>
-            <option value="mark2">MARK II (ХРОМ)</option>
-            <option value="mark3">MARK III (КЛАССИКА)</option>
-            <option value="mark50">MARK L (НАНО)</option>
-        </select>
+    <div class="color-picker-panel">
+        <span id="picker-label">ИНТЕРФЕЙС БРОНИ:</span>
+        <input type="color" id="color-picker" value="#00e5ff">
     </div>
 
     <div class="core" id="voice-btn">JARVIS</div>
@@ -139,15 +96,18 @@
         const userInput = document.getElementById('user-input');
         const sendBtn = document.getElementById('send-btn');
         const voiceBtn = document.getElementById('voice-btn');
-        const armorSelect = document.getElementById('armor-select');
+        const colorPicker = document.getElementById('color-picker');
 
-        // Логика переключения тем костюмов
-        armorSelect.addEventListener('change', (e) => {
-            document.body.className = ''; // Сбрасываем старую тему
-            const selected = e.target.value;
-            if (selected !== 'default') {
-                document.body.classList.add('theme-' + selected);
-            }
+        // Живое изменение всех цветов интерфейса на iPad
+        colorPicker.addEventListener('input', (e) => {
+            const hexColor = e.target.value;
+            document.documentElement.style.setProperty('--main-color', hexColor);
+            
+            // Вычисляем мягкое нано-свечение на основе выбранного цвета
+            const r = parseInt(hexColor.substr(1,2), 16);
+            const g = parseInt(hexColor.substr(3,2), 16);
+            const b = parseInt(hexColor.substr(5,2), 16);
+            document.documentElement.style.setProperty('--main-glow', `rgba(${r}, ${g}, ${b}, 0.4)`);
         });
 
         function unlockAudioiOS() {
