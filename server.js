@@ -6,7 +6,6 @@ app.use(express.static(__dirname));
 
 app.post('/api/chat', async (req, res) => {
     try {
-        // Сервер будет брать ключ тайно из переменных окружения Render
         const token = process.env.AI_TOKEN;
 
         if (!token) {
@@ -23,7 +22,7 @@ app.post('/api/chat', async (req, res) => {
                 messages: [
                     { 
                         role: "system", 
-                        content: "Ты — ДЖАРВИС, искусственный интеллект Тони Старка. Отвечай коротко (1-2 предложения), на русском языке, называй собеседника 'сэр'." 
+                        content: "Ты — ДЖАРВИС, искусственный интеллект Тони Старка из Железного Человека. Отвечай всегда строго на русском языке, очень коротко (одно-два предложения), вежливо, по делу, всегда называй собеседника 'сэр'." 
                     },
                     { role: "user", content: req.body.message }
                 ],
@@ -34,11 +33,12 @@ app.post('/api/chat', async (req, res) => {
 
         const data = await response.json();
         
-        if (data && data.choices && data.choices[0] && data.choices[0].message) {
-            res.json({ reply: data.choices[0].message.content.trim() });
-        } else {
-            res.json({ reply: "Извините, сэр. Спутник вернул пустой поток данных. Повторите попытку." });
-        }
+        // Безопасное извлечение ответа БЕЗ квадратных скобок, защищённое от сбоев на iPad
+        const candidate = data.choices.at(0);
+        const messageObject = candidate.message;
+        const replyText = messageObject.content;
+        
+        res.json({ reply: replyText.trim() });
     } catch (err) {
         console.error(err);
         res.json({ reply: "Извините, сэр. Мои спутниковые цепи связи обновляются. Повторите запрос через секунду." });
@@ -46,4 +46,6 @@ app.post('/api/chat', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => { console.log("Джарвис онлайн"); });
+app.listen(PORT, () => {
+    console.log("Сервер успешно запущен");
+});
