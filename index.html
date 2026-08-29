@@ -1,345 +1,623 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>J.A.R.V.I.S.</title>
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0,
+               maximum-scale=1.0, user-scalable=no">
+
+<title>J.A.R.V.I.S. Control Panel</title>
 
 <style>
+
 :root {
     --bg: #060d1a;
     --main: #00e5ff;
-    --glow: rgba(0,229,255,.4);
-    --panel: rgba(0,15,30,.65);
+    --glow: rgba(0,229,255,0.45);
+    --panel: rgba(0,15,30,0.70);
     --border: #00e5ff;
+    --button-text: #00151d;
 }
 
-.theme-mark1 {
-    --bg:#15181c;
-    --main:#e0e0e0;
-    --glow:rgba(255,255,255,.2);
-    --panel:rgba(40,45,50,.65);
-    --border:#777;
+/* =====================================================
+   THEMES
+===================================================== */
+
+body.theme-jarvis {
+    --bg:#060d1a;
+    --main:#00e5ff;
+    --glow:rgba(0,229,255,.45);
+    --panel:rgba(0,15,30,.70);
+    --border:#00e5ff;
+    --button-text:#00151d;
 }
 
-.theme-mark2 {
-    --bg:#0f141d;
-    --main:#a4c2f4;
-    --glow:rgba(164,194,244,.5);
-    --panel:rgba(20,30,45,.65);
-    --border:#a4c2f4;
+body.theme-mark1 {
+    --bg:#17120e;
+    --main:#c58b55;
+    --glow:rgba(197,139,85,.45);
+    --panel:rgba(35,25,18,.75);
+    --border:#c58b55;
+    --button-text:#21140b;
 }
 
-.theme-mark3 {
-    --bg:#220505;
-    --main:#ffcc00;
-    --glow:rgba(255,204,0,.4);
-    --panel:rgba(80,10,10,.65);
-    --border:#ff3333;
+body.theme-mark2 {
+    --bg:#11161b;
+    --main:#dce7ed;
+    --glow:rgba(220,231,237,.45);
+    --panel:rgba(30,35,40,.75);
+    --border:#b9c5cc;
+    --button-text:#11161b;
 }
 
-.theme-mark50 {
-    --bg:#1a020d;
+body.theme-mark3 {
+    --bg:#180407;
+    --main:#ffcc36;
+    --glow:rgba(255,80,40,.50);
+    --panel:rgba(50,5,8,.75);
+    --border:#ff3344;
+    --button-text:#240000;
+}
+
+body.theme-mark42 {
+    --bg:#12040a;
+    --main:#ff4b3e;
+    --glow:rgba(255,65,45,.55);
+    --panel:rgba(45,5,10,.75);
+    --border:#ffb52e;
+    --button-text:#260300;
+}
+
+body.theme-mark48 {
+    --bg:#090b10;
+    --main:#d92735;
+    --glow:rgba(220,30,45,.50);
+    --panel:rgba(20,22,28,.80);
+    --border:#8e9aa5;
+    --button-text:#ffffff;
+}
+
+body.theme-america {
+    --bg:#050b18;
+    --main:#ffffff;
+    --glow:rgba(50,120,255,.50);
+    --panel:rgba(5,15,35,.80);
+    --border:#e63946;
+    --button-text:#07152e;
+}
+
+body.theme-mark50 {
+    --bg:#050b0d;
     --main:#00ffcc;
-    --glow:rgba(0,255,204,.5);
-    --panel:rgba(60,5,25,.65);
-    --border:#ff0055;
+    --glow:rgba(0,255,204,.50);
+    --panel:rgba(0,25,25,.75);
+    --border:#ff1744;
+    --button-text:#001f1a;
 }
+
+body.theme-mark85 {
+    --bg:#160304;
+    --main:#ffd34e;
+    --glow:rgba(255,70,40,.55);
+    --panel:rgba(50,4,5,.78);
+    --border:#ff2638;
+    --button-text:#250000;
+}
+
+/* =====================================================
+   GLOBAL
+===================================================== */
 
 * {
     box-sizing:border-box;
 }
 
 body {
+
     background:
-        radial-gradient(circle at center, rgba(0,229,255,.08), transparent 45%),
-        var(--bg);
+        radial-gradient(
+            circle at center,
+            var(--main),
+            var(--bg) 65%
+        );
 
-    color:var(--main);
-    font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+    background-blend-mode:
+        soft-light;
 
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
+    color:
+        var(--main);
 
-    min-height:100vh;
-    margin:0;
-    padding:20px;
+    font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
 
-    overflow:hidden;
-    transition:.4s;
+    min-height:
+        100vh;
+
+    margin:
+        0;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    overflow:
+        hidden;
+
+    transition:
+        background .5s,
+        color .5s;
 }
 
+/* =====================================================
+   CONTROL PANEL
+===================================================== */
+
 .control-panel {
-    position:absolute;
-    top:20px;
-    right:20px;
 
-    display:flex;
-    flex-direction:column;
-    gap:8px;
+    position:
+        absolute;
 
-    background:rgba(0,0,0,.45);
-    padding:12px;
+    top:
+        20px;
 
-    border:1px solid var(--main);
-    border-radius:8px;
+    right:
+        20px;
 
-    box-shadow:0 0 15px var(--glow);
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        8px;
+
+    padding:
+        12px;
+
+    background:
+        var(--panel);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        8px;
+
+    box-shadow:
+        0 0 18px var(--glow);
+
+    backdrop-filter:
+        blur(10px);
+
+    z-index:
+        20;
 }
 
 .control-panel label {
-    font-size:10px;
-    font-weight:bold;
-    letter-spacing:1px;
+
+    font-size:
+        10px;
+
+    font-weight:
+        bold;
+
+    letter-spacing:
+        1px;
 }
 
 select {
-    background:#000;
-    color:var(--main);
 
-    border:1px solid var(--main);
-    border-radius:4px;
+    background:
+        #000;
 
-    padding:6px;
+    color:
+        var(--main);
 
-    outline:none;
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        5px;
+
+    padding:
+        7px;
+
+    font-size:
+        12px;
+
+    font-weight:
+        bold;
+
+    outline:
+        none;
 }
 
-.custom-color-row {
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-input[type="color"] {
-    width:28px;
-    height:28px;
-    border:0;
-    background:transparent;
-}
+/* =====================================================
+   CORE
+===================================================== */
 
 .core {
-    width:140px;
-    height:140px;
 
-    border:3px solid var(--main);
-    border-radius:50%;
+    width:
+        145px;
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    height:
+        145px;
 
-    font-weight:bold;
-    letter-spacing:3px;
+    border:
+        3px solid var(--main);
 
-    cursor:pointer;
+    border-radius:
+        50%;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    cursor:
+        pointer;
+
+    user-select:
+        none;
+
+    font-weight:
+        bold;
+
+    letter-spacing:
+        3px;
+
+    text-shadow:
+        0 0 10px var(--main);
 
     box-shadow:
         0 0 25px var(--glow),
-        inset 0 0 25px rgba(0,229,255,.05);
+        0 0 60px var(--glow);
 
-    text-shadow:0 0 12px var(--main);
+    background:
+        rgba(255,255,255,.02);
 
-    transition:.3s;
+    margin-bottom:
+        8px;
 
-    user-select:none;
+    transition:
+        .3s;
 }
 
 .core:hover {
-    transform:scale(1.04);
+    transform:
+        scale(1.04);
 }
 
-.listening {
-    animation:pulse 1s infinite alternate;
+.core.listening {
 
-    border-color:#ff0055 !important;
-    color:#ff0055 !important;
+    animation:
+        listeningPulse .8s infinite alternate;
+
+    border-color:
+        #ff1744;
+
+    color:
+        #ff1744;
 
     box-shadow:
-        0 0 50px #ff0055 !important;
+        0 0 30px #ff1744,
+        0 0 70px #ff1744;
 }
 
-@keyframes pulse {
-    from { transform:scale(1); }
-    to { transform:scale(1.08); }
+.core.speaking {
+
+    animation:
+        speakingPulse .65s infinite alternate;
 }
+
+@keyframes listeningPulse {
+
+    from {
+        transform:scale(1);
+    }
+
+    to {
+        transform:scale(1.07);
+    }
+}
+
+@keyframes speakingPulse {
+
+    from {
+        transform:scale(1);
+    }
+
+    to {
+        transform:scale(1.04);
+    }
+}
+
+/* =====================================================
+   STATUS
+===================================================== */
 
 .status {
-    margin-top:15px;
-    margin-bottom:15px;
 
-    font-size:11px;
-    letter-spacing:2px;
+    font-size:
+        11px;
 
-    text-align:center;
+    letter-spacing:
+        3px;
+
+    text-transform:
+        uppercase;
+
+    text-align:
+        center;
+
+    margin-bottom:
+        15px;
+
+    max-width:
+        90%;
 }
 
+/* =====================================================
+   CHAT
+===================================================== */
+
 #log {
-    width:90%;
-    max-width:600px;
 
-    height:260px;
+    width:
+        85%;
 
-    border:1px solid rgba(255,255,255,.15);
+    max-width:
+        600px;
 
-    background:var(--panel);
+    height:
+        250px;
 
-    padding:15px;
+    padding:
+        15px;
 
-    overflow-y:auto;
+    overflow-y:
+        auto;
 
-    border-radius:8px;
+    border:
+        1px solid var(--border);
 
-    backdrop-filter:blur(8px);
+    border-radius:
+        7px;
 
-    box-shadow:0 0 20px rgba(0,0,0,.3);
+    background:
+        var(--panel);
+
+    backdrop-filter:
+        blur(10px);
+
+    font-size:
+        14px;
+
+    margin-bottom:
+        15px;
+
+    box-shadow:
+        0 0 15px var(--glow);
 }
 
 .u-line {
-    color:#fff;
-    margin-bottom:8px;
+
+    color:
+        #fff;
+
+    margin-bottom:
+        9px;
 }
 
 .j-line {
-    color:var(--main);
-    font-weight:bold;
-    margin-bottom:14px;
 
-    text-shadow:0 0 5px var(--glow);
+    color:
+        var(--main);
+
+    font-weight:
+        bold;
+
+    margin-bottom:
+        15px;
 }
 
-.error-line {
-    color:#ff4466;
-    font-weight:bold;
-    margin-bottom:14px;
-}
+/* =====================================================
+   INPUT
+===================================================== */
 
 .input-area {
-    display:flex;
 
-    width:90%;
-    max-width:600px;
+    width:
+        85%;
 
-    gap:10px;
+    max-width:
+        600px;
 
-    margin-top:15px;
+    display:
+        flex;
+
+    gap:
+        10px;
 }
 
 input[type="text"] {
-    flex:1;
 
-    background:rgba(0,0,0,.5);
+    flex:
+        1;
 
-    border:1px solid var(--border);
+    min-width:
+        0;
 
-    color:white;
+    background:
+        rgba(0,0,0,.55);
 
-    padding:12px;
+    color:
+        #fff;
 
-    border-radius:5px;
+    border:
+        1px solid var(--border);
 
-    font-size:15px;
+    border-radius:
+        5px;
 
-    outline:none;
+    padding:
+        12px;
+
+    font-size:
+        14px;
+
+    outline:
+        none;
 }
 
-input[type="text"]:focus {
-    box-shadow:0 0 12px var(--glow);
+button.send-btn {
+
+    background:
+        var(--main);
+
+    color:
+        var(--button-text);
+
+    border:
+        none;
+
+    border-radius:
+        5px;
+
+    padding:
+        10px 17px;
+
+    font-weight:
+        bold;
+
+    cursor:
+        pointer;
 }
 
-button {
-    border:none;
-    border-radius:5px;
+button:disabled {
 
-    padding:12px 16px;
-
-    font-weight:bold;
-
-    cursor:pointer;
+    opacity:
+        .5;
 }
 
-.send-btn {
-    background:var(--main);
-    color:#06101a;
-}
+/* =====================================================
+   MOBILE
+===================================================== */
 
-.send-btn:disabled {
-    opacity:.5;
-    cursor:not-allowed;
-}
-
-@media(max-width:600px) {
+@media(max-width:650px) {
 
     .control-panel {
-        top:10px;
-        right:10px;
-        transform:scale(.85);
-        transform-origin:top right;
+
+        top:
+            10px;
+
+        right:
+            10px;
     }
 
     .core {
-        width:120px;
-        height:120px;
+
+        width:
+            125px;
+
+        height:
+            125px;
     }
 
     #log {
-        height:220px;
+
+        width:
+            92%;
+
+        height:
+            230px;
     }
 
     .input-area {
-        width:95%;
+
+        width:
+            92%;
     }
 }
+
 </style>
 </head>
 
-<body>
+<body class="theme-jarvis">
+
+<!-- =====================================================
+     INTERFACE SELECT
+===================================================== -->
 
 <div class="control-panel">
 
-    <label>ГОТОВАЯ БРОНЯ:</label>
+    <label>
+        ВЫБОР ИНТЕРФЕЙСА
+    </label>
 
     <select id="armor-select">
 
-        <option value="default">
-            J.A.R.V.I.S. СТАНДАРТ
+        <option value="jarvis">
+            J.A.R.V.I.S. — СИНИЙ
         </option>
 
         <option value="mark1">
-            MARK I (ПЕЩЕРА)
+            MARK I
         </option>
 
         <option value="mark2">
-            MARK II (ХРОМ)
+            MARK II
         </option>
 
         <option value="mark3">
-            MARK III (КЛАССИКА)
+            MARK III
+        </option>
+
+        <option value="mark42">
+            MARK XLII
+        </option>
+
+        <option value="mark48">
+            MARK XLVIII
+        </option>
+
+        <option value="america">
+            MARK — AMERICAN FLAG 🇺🇸
         </option>
 
         <option value="mark50">
-            MARK L (НАНО)
+            MARK L — NANOTECH
+        </option>
+
+        <option value="mark85">
+            MARK LXXXV
         </option>
 
     </select>
 
-    <div class="custom-color-row">
-
-        <label>СВОЙ ЦВЕТ:</label>
-
-        <input
-            type="color"
-            id="color-picker"
-            value="#00e5ff"
-        >
-
-    </div>
-
 </div>
 
+<!-- =====================================================
+     CORE
+===================================================== -->
 
 <div
     class="core"
@@ -348,7 +626,6 @@ button {
     JARVIS
 </div>
 
-
 <div
     class="status"
     id="status"
@@ -356,16 +633,22 @@ button {
     СИСТЕМА СВЯЗИ ГОТОВА
 </div>
 
+<!-- =====================================================
+     CHAT
+===================================================== -->
 
 <div id="log">
 
     <div class="j-line">
-        Джарвис: Система J.A.R.V.I.S. активирована, сэр.
-        Центральный интеллект готов к работе.
+        Джарвис: Система J.A.R.V.I.S.
+        активирована, сэр.
     </div>
 
 </div>
 
+<!-- =====================================================
+     INPUT
+===================================================== -->
 
 <div class="input-area">
 
@@ -385,8 +668,11 @@ button {
 
 </div>
 
-
 <script>
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
 
 const status =
     document.getElementById("status");
@@ -406,68 +692,310 @@ const voiceBtn =
 const armorSelect =
     document.getElementById("armor-select");
 
-const colorPicker =
-    document.getElementById("color-picker");
+
+/* =====================================================
+   THEME
+===================================================== */
+
+const savedTheme =
+    localStorage.getItem("jarvis-theme");
+
+if (savedTheme) {
+
+    document.body.className =
+        "theme-" + savedTheme;
+
+    armorSelect.value =
+        savedTheme;
+}
+
+armorSelect.addEventListener(
+    "change",
+    () => {
+
+        const theme =
+            armorSelect.value;
+
+        document.body.className =
+            "theme-" + theme;
+
+        localStorage.setItem(
+            "jarvis-theme",
+            theme
+        );
+
+    }
+);
 
 
-// ================================
-// ЗВУК
-// ================================
+/* =====================================================
+   KOKORO AUDIO
+===================================================== */
+
+let currentAudio = null;
+
+let audioUnlocked = false;
+
+
+/*
+ * iPhone Safari иногда требует,
+ * чтобы Audio был создан после
+ * действия пользователя.
+ */
 
 function unlockAudio() {
 
-    if ("speechSynthesis" in window) {
+    if (audioUnlocked) {
+        return;
+    }
 
-        const u =
-            new SpeechSynthesisUtterance("");
+    try {
 
-        window.speechSynthesis.speak(u);
+        const audio =
+            new Audio();
+
+        audio.volume = 0;
+
+        audio.src =
+            "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=";
+
+        audio.play()
+            .catch(() => {});
+
+        audioUnlocked = true;
+
+    } catch (error) {
+
+        console.log(
+            "Audio unlock:",
+            error
+        );
+
     }
 }
 
 
-function speak(text) {
+/* =====================================================
+   STOP AUDIO
+===================================================== */
 
-    if (!("speechSynthesis" in window))
-        return;
+function stopSpeaking() {
 
-    window.speechSynthesis.cancel();
+    if (currentAudio) {
 
-    const speech =
-        new SpeechSynthesisUtterance(text);
+        try {
+            currentAudio.pause();
+            currentAudio.currentTime = 0;
+        }
 
-    speech.lang = "ru-RU";
-    speech.rate = 1;
-    speech.pitch = 0.9;
+        catch (error) {}
 
-    window.speechSynthesis.speak(speech);
+        currentAudio = null;
+    }
+
+    voiceBtn.classList.remove(
+        "speaking"
+    );
 }
 
 
-// ================================
-// ДОБАВЛЕНИЕ СООБЩЕНИЙ
-// ================================
+/* =====================================================
+   KOKORO SPEAK
+===================================================== */
 
-function addMessage(type, text) {
+async function speakWithKokoro(text) {
+
+    text =
+        String(text || "").trim();
+
+    if (!text) {
+        return;
+    }
+
+    stopSpeaking();
+
+    voiceBtn.classList.add(
+        "speaking"
+    );
+
+    status.innerText =
+        "ДЖАРВИС ГОВОРИТ, СЭР...";
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/tts",
+                {
+
+                    method:
+                        "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            text: text
+                        })
+
+                }
+            );
+
+
+        if (!response.ok) {
+
+            let errorText =
+                "Ошибка Kokoro";
+
+            try {
+
+                const data =
+                    await response.json();
+
+                errorText =
+                    data?.error ||
+                    errorText;
+
+            }
+
+            catch (error) {}
+
+            throw new Error(
+                errorText
+            );
+
+        }
+
+
+        const blob =
+            await response.blob();
+
+
+        if (
+            !blob ||
+            blob.size < 100
+        ) {
+
+            throw new Error(
+                "Сервер вернул пустое аудио."
+            );
+
+        }
+
+
+        const url =
+            URL.createObjectURL(
+                blob
+            );
+
+
+        const audio =
+            new Audio(url);
+
+
+        currentAudio =
+            audio;
+
+
+        audio.volume =
+            1;
+
+
+        audio.onended =
+            () => {
+
+                URL.revokeObjectURL(
+                    url
+                );
+
+                if (
+                    currentAudio ===
+                    audio
+                ) {
+
+                    currentAudio =
+                        null;
+
+                }
+
+                voiceBtn.classList.remove(
+                    "speaking"
+                );
+
+                status.innerText =
+                    "СИСТЕМА СВЯЗИ ГОТОВА";
+
+            };
+
+
+        audio.onerror =
+            () => {
+
+                URL.revokeObjectURL(
+                    url
+                );
+
+                if (
+                    currentAudio ===
+                    audio
+                ) {
+
+                    currentAudio =
+                        null;
+
+                }
+
+                voiceBtn.classList.remove(
+                    "speaking"
+                );
+
+                status.innerText =
+                    "ОШИБКА ВОСПРОИЗВЕДЕНИЯ АУДИО";
+
+            };
+
+
+        await audio.play();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "KOKORO PLAY ERROR:",
+            error
+        );
+
+        voiceBtn.classList.remove(
+            "speaking"
+        );
+
+        status.innerText =
+            "KOKORO: " +
+            error.message;
+
+    }
+
+}
+
+
+/* =====================================================
+   ADD MESSAGES
+===================================================== */
+
+function addUserMessage(text) {
 
     const div =
         document.createElement("div");
 
-    if (type === "user") {
+    div.className =
+        "u-line";
 
-        div.className = "u-line";
-        div.textContent = "Вы: " + text;
-
-    } else if (type === "jarvis") {
-
-        div.className = "j-line";
-        div.textContent = "Джарвис: " + text;
-
-    } else {
-
-        div.className = "error-line";
-        div.textContent = "Система: " + text;
-    }
+    div.textContent =
+        "Вы: " + text;
 
     log.appendChild(div);
 
@@ -476,197 +1004,298 @@ function addMessage(type, text) {
 }
 
 
-// ================================
-// ГЛАВНАЯ ФУНКЦИЯ ИИ
-// ================================
+function addJarvisMessage(text) {
+
+    const div =
+        document.createElement("div");
+
+    div.className =
+        "j-line";
+
+    div.textContent =
+        "Джарвис: " + text;
+
+    log.appendChild(div);
+
+    log.scrollTop =
+        log.scrollHeight;
+}
+
+
+/* =====================================================
+   ASK JARVIS
+===================================================== */
 
 async function askJarvis(text) {
 
-    text = text.trim();
+    text =
+        String(text || "").trim();
 
-    if (!text)
+    if (!text) {
         return;
+    }
 
     unlockAudio();
 
-    addMessage("user", text);
-
-    userInput.value = "";
-
-    sendBtn.disabled = true;
+    addUserMessage(text);
 
     status.innerText =
-        "СВЯЗЬ С ЦЕНТРАЛЬНЫМ ИНТЕЛЛЕКТОМ...";
+        "ОБРАБОТКА ДАННЫХ...";
+
+    sendBtn.disabled =
+        true;
+
+    userInput.disabled =
+        true;
 
     try {
 
         const response =
-            await fetch("/api/chat", {
+            await fetch(
+                "/api/chat",
+                {
 
-                method: "POST",
+                    method:
+                        "POST",
 
-                headers: {
-                    "Content-Type":
-                        "application/json"
-                },
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
 
-                body: JSON.stringify({
-                    message: text
-                })
+                    body:
+                        JSON.stringify({
+                            message:
+                                text
+                        })
 
-            });
+                }
+            );
 
 
-        const data =
-            await response.json();
+        let data;
+
+        try {
+
+            data =
+                await response.json();
+
+        }
+
+        catch (error) {
+
+            throw new Error(
+                "Сервер вернул неправильный ответ."
+            );
+
+        }
 
 
         if (!response.ok) {
 
             throw new Error(
-                data.error ||
-                "Сервер вернул ошибку"
+                data?.error ||
+                "Ошибка сервера."
             );
+
         }
 
 
-        if (!data.reply) {
+        if (
+            !data?.answer
+        ) {
 
             throw new Error(
-                "ИИ не вернул ответ"
+                "ИИ не вернул ответ."
             );
+
         }
 
 
-        addMessage(
-            "jarvis",
-            data.reply
+        const answer =
+            String(
+                data.answer
+            ).trim();
+
+
+        addJarvisMessage(
+            answer
         );
 
 
-        status.innerText =
-            "СИСТЕМА СВЯЗИ ГОТОВА";
+        /*
+         * ВАЖНО:
+         * здесь больше НЕТ speechSynthesis.
+         *
+         * Теперь используется
+         * настоящий /api/tts → Kokoro.
+         */
 
+        await speakWithKokoro(
+            answer
+        );
 
-        speak(data.reply);
+    }
 
+    catch (error) {
 
-    } catch (error) {
+        console.error(
+            "CHAT ERROR:",
+            error
+        );
 
-        console.error(error);
-
-        addMessage(
-            "error",
-            "Сэр, произошла ошибка соединения с центральным интеллектом: " +
+        addJarvisMessage(
+            "Сэр, произошла ошибка: " +
             error.message
         );
 
         status.innerText =
             "ОШИБКА СИСТЕМЫ";
 
-    } finally {
+    }
 
-        sendBtn.disabled = false;
+    finally {
+
+        sendBtn.disabled =
+            false;
+
+        userInput.disabled =
+            false;
 
         userInput.focus();
+
     }
+
 }
 
 
-// ================================
-// КНОПКА ВВОДА
-// ================================
+/* =====================================================
+   TEXT INPUT
+===================================================== */
 
 sendBtn.addEventListener(
     "click",
     () => {
 
-        askJarvis(
-            userInput.value
-        );
+        const text =
+            userInput.value.trim();
+
+        if (!text) {
+            return;
+        }
+
+        userInput.value =
+            "";
+
+        askJarvis(text);
 
     }
 );
 
 
-// ================================
-// ENTER
-// ================================
-
 userInput.addEventListener(
     "keydown",
     event => {
 
-        if (event.key === "Enter") {
+        if (
+            event.key === "Enter"
+        ) {
 
             event.preventDefault();
 
-            askJarvis(
-                userInput.value
-            );
+            sendBtn.click();
+
         }
 
     }
 );
 
 
-// ================================
-// ГОЛОС
-// ================================
+/* =====================================================
+   SPEECH RECOGNITION
+===================================================== */
 
 const SpeechRecognition =
     window.SpeechRecognition ||
     window.webkitSpeechRecognition;
 
 
+let recognition =
+    null;
+
+let listening =
+    false;
+
+let voiceText =
+    "";
+
+
 if (SpeechRecognition) {
 
-    const recognition =
+    recognition =
         new SpeechRecognition();
 
-    recognition.lang = "ru-RU";
 
-    recognition.interimResults = false;
-
-    recognition.continuous = false;
+    recognition.lang =
+        "ru-RU";
 
 
-    voiceBtn.addEventListener(
-        "click",
+    recognition.continuous =
+        false;
+
+
+    recognition.interimResults =
+        false;
+
+
+    recognition.maxAlternatives =
+        1;
+
+
+    recognition.onstart =
         () => {
 
-            unlockAudio();
+            listening =
+                true;
 
-            try {
+            voiceText =
+                "";
 
-                recognition.start();
+            voiceBtn.classList.add(
+                "listening"
+            );
 
-                voiceBtn.classList.add(
-                    "listening"
-                );
+            voiceBtn.innerText =
+                "СТОП";
 
-                status.innerText =
-                    "СЛУШАЮ ВАС, СЭР...";
+            status.innerText =
+                "СЛУШАЮ ВАС, СЭР...";
 
-            } catch (error) {
-
-                console.log(error);
-
-            }
-
-        }
-    );
+        };
 
 
     recognition.onresult =
         event => {
 
+            const result =
+                event.results?.[0]?.[0];
+
+            if (!result) {
+                return;
+            }
+
             const text =
-                event.results[0][0].transcript;
+                result.transcript
+                    .trim();
 
             if (text) {
 
-                askJarvis(text);
+                voiceText =
+                    text;
+
+                status.innerText =
+                    "УСЛЫШАЛ: " + text;
+
             }
 
         };
@@ -676,12 +1305,47 @@ if (SpeechRecognition) {
         event => {
 
             console.error(
-                "Speech error:",
+                "MIC ERROR:",
                 event.error
             );
 
-            status.innerText =
-                "ГОЛОС НЕ РАСПОЗНАН";
+
+            if (
+                event.error ===
+                "not-allowed"
+            ) {
+
+                status.innerText =
+                    "РАЗРЕШИТЕ МИКРОФОН В SAFARI";
+
+            }
+
+            else if (
+                event.error ===
+                "no-speech"
+            ) {
+
+                status.innerText =
+                    "Я НЕ УСЛЫШАЛ ВАС, СЭР";
+
+            }
+
+            else if (
+                event.error ===
+                "audio-capture"
+            ) {
+
+                status.innerText =
+                    "МИКРОФОН НЕДОСТУПЕН";
+
+            }
+
+            else {
+
+                status.innerText =
+                    "ОШИБКА МИКРОФОНА";
+
+            }
 
         };
 
@@ -689,112 +1353,89 @@ if (SpeechRecognition) {
     recognition.onend =
         () => {
 
+            listening =
+                false;
+
             voiceBtn.classList.remove(
                 "listening"
             );
 
-            if (
+            voiceBtn.innerText =
+                "JARVIS";
+
+
+            if (voiceText) {
+
+                const text =
+                    voiceText;
+
+                voiceText =
+                    "";
+
+                askJarvis(
+                    text
+                );
+
+            }
+
+            else if (
                 status.innerText ===
                 "СЛУШАЮ ВАС, СЭР..."
             ) {
 
                 status.innerText =
                     "СИСТЕМА СВЯЗИ ГОТОВА";
+
             }
 
         };
 
-} else {
 
-    status.innerText =
-        "ГОЛОСОВОЙ ВВОД НЕ ПОДДЕРЖИВАЕТСЯ";
-}
+    voiceBtn.addEventListener(
+        "click",
+        () => {
+
+            unlockAudio();
 
 
-// ================================
-// БРОНЯ
-// ================================
+            if (listening) {
 
-armorSelect.addEventListener(
-    "change",
-    event => {
+                recognition.stop();
 
-        document.body.className = "";
+                return;
 
-        const selected =
-            event.target.value;
+            }
 
-        if (selected !== "default") {
 
-            document.body.classList.add(
-                "theme-" + selected
-            );
+            voiceText =
+                "";
 
-        } else {
 
-            document.documentElement
-                .style
-                .setProperty(
-                    "--main",
-                    "#00e5ff"
+            try {
+
+                recognition.start();
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    error
                 );
 
-            document.documentElement
-                .style
-                .setProperty(
-                    "--glow",
-                    "rgba(0,229,255,.4)"
-                );
+            }
 
         }
+    );
 
-    }
-);
+}
 
+else {
 
-// ================================
-// СВОЙ ЦВЕТ
-// ================================
+    status.innerText =
+        "ГОЛОСОВОЙ РЕЖИМ НЕ ПОДДЕРЖИВАЕТСЯ";
 
-colorPicker.addEventListener(
-    "input",
-    event => {
-
-        const hex =
-            event.target.value;
-
-        armorSelect.value =
-            "default";
-
-        document.body.className = "";
-
-        document.documentElement
-            .style
-            .setProperty(
-                "--main",
-                hex
-            );
-
-
-        const r =
-            parseInt(hex.substring(1,3),16);
-
-        const g =
-            parseInt(hex.substring(3,5),16);
-
-        const b =
-            parseInt(hex.substring(5,7),16);
-
-
-        document.documentElement
-            .style
-            .setProperty(
-                "--glow",
-                `rgba(${r},${g},${b},.4)`
-            );
-
-    }
-);
+}
 
 </script>
 
