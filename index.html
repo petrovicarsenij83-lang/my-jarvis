@@ -1,105 +1,756 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>J.A.R.V.I.S. Control Panel</title>
+
+<style>
+
+:root {
+    --bg: #060d1a;
+    --main: #00e5ff;
+    --glow: rgba(0,229,255,0.4);
+    --panel: rgba(0,15,30,0.65);
+    --border: #00e5ff;
+    --button-text: #00151d;
+}
+
+/* ================= JARVIS ================= */
+
+body.theme-jarvis {
+    --bg: #060d1a;
+    --main: #00e5ff;
+    --glow: rgba(0,229,255,0.45);
+    --panel: rgba(0,15,30,0.65);
+    --border: #00e5ff;
+    --button-text: #00151d;
+}
+
+/* ================= MARK I ================= */
+
+body.theme-mark1 {
+    --bg: #17120e;
+    --main: #c58b55;
+    --glow: rgba(197,139,85,0.45);
+    --panel: rgba(35,25,18,0.75);
+    --border: #c58b55;
+    --button-text: #21140b;
+}
+
+/* ================= MARK II ================= */
+
+body.theme-mark2 {
+    --bg: #11161b;
+    --main: #dce7ed;
+    --glow: rgba(220,231,237,0.45);
+    --panel: rgba(30,35,40,0.75);
+    --border: #b9c5cc;
+    --button-text: #11161b;
+}
+
+/* ================= MARK III ================= */
+
+body.theme-mark3 {
+    --bg: #180407;
+    --main: #ffcc36;
+    --glow: rgba(255,80,40,0.5);
+    --panel: rgba(50,5,8,0.75);
+    --border: #ff3344;
+    --button-text: #240000;
+}
+
+/* ================= MARK XLII ================= */
+
+body.theme-mark42 {
+    --bg: #12040a;
+    --main: #ff4b3e;
+    --glow: rgba(255,65,45,0.55);
+    --panel: rgba(45,5,10,0.75);
+    --border: #ffb52e;
+    --button-text: #260300;
+}
+
+/* ================= MARK XLVIII ================= */
+
+body.theme-mark48 {
+    --bg: #090b10;
+    --main: #d92735;
+    --glow: rgba(220,30,45,0.5);
+    --panel: rgba(20,22,28,0.8);
+    --border: #8e9aa5;
+    --button-text: #ffffff;
+}
+
+/* ================= AMERICAN FLAG ================= */
+
+body.theme-america {
+    --bg: #050b18;
+    --main: #ffffff;
+    --glow: rgba(50,120,255,0.5);
+    --panel: rgba(5,15,35,0.8);
+    --border: #e63946;
+    --button-text: #07152e;
+}
+
+/* ================= MARK L ================= */
+
+body.theme-mark50 {
+    --bg: #050b0d;
+    --main: #00ffcc;
+    --glow: rgba(0,255,204,0.5);
+    --panel: rgba(0,25,25,0.75);
+    --border: #ff1744;
+    --button-text: #001f1a;
+}
+
+/* ================= MARK LXXXV ================= */
+
+body.theme-mark85 {
+    --bg: #160304;
+    --main: #ffd34e;
+    --glow: rgba(255,70,40,0.55);
+    --panel: rgba(50,4,5,0.78);
+    --border: #ff2638;
+    --button-text: #250000;
+}
+
+/* ================= BODY ================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+
+    background:
+        radial-gradient(
+            circle at center,
+            color-mix(
+                in srgb,
+                var(--main) 12%,
+                var(--bg)
+            ),
+            var(--bg) 70%
+        );
+
+    color: var(--main);
+
+    font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 100vh;
+
+    margin: 0;
+
+    overflow: hidden;
+
+    transition:
+        background 0.5s,
+        color 0.5s;
+}
+
+/* ================= CONTROL PANEL ================= */
+
+.control-panel {
+
+    position: absolute;
+
+    top: 20px;
+    right: 20px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+
+    background: var(--panel);
+
+    padding: 12px;
+
+    border-radius: 8px;
+
+    border: 1px solid var(--border);
+
+    box-shadow:
+        0 0 15px var(--glow);
+
+    backdrop-filter: blur(10px);
+
+    z-index: 10;
+}
+
+.control-panel label {
+
+    font-size: 10px;
+
+    font-weight: bold;
+
+    letter-spacing: 1px;
+}
+
+select {
+
+    background: #000;
+
+    border:
+        1px solid
+        var(--border);
+
+    color: var(--main);
+
+    padding: 7px;
+
+    border-radius: 4px;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    outline: none;
+
+    cursor: pointer;
+}
+
+/* ================= CORE ================= */
+
+.core {
+
+    width: 145px;
+    height: 145px;
+
+    border:
+        3px solid
+        var(--main);
+
+    border-radius: 50%;
+
+    box-shadow:
+        0 0 25px var(--glow),
+        0 0 55px var(--glow);
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    text-shadow:
+        0 0 10px var(--main);
+
+    background:
+        rgba(255,255,255,0.015);
+
+    margin-bottom: 8px;
+
+    transition:
+        all 0.3s;
+
+    letter-spacing: 3px;
+
+    user-select: none;
+}
+
+.core:hover {
+    transform: scale(1.04);
+}
+
+.core.listening {
+
+    animation:
+        listeningPulse 0.8s
+        infinite alternate;
+
+    border-color:
+        #ff1744;
+
+    box-shadow:
+        0 0 30px #ff1744,
+        0 0 70px #ff1744;
+
+    color:
+        #ff1744;
+}
+
+@keyframes listeningPulse {
+
+    from {
+        transform: scale(1);
+    }
+
+    to {
+        transform: scale(1.07);
+    }
+}
+
+/* ================= STATUS ================= */
+
+.status {
+
+    font-size: 11px;
+
+    letter-spacing: 3px;
+
+    text-transform: uppercase;
+
+    margin-bottom: 15px;
+
+    text-align: center;
+
+    max-width: 90%;
+}
+
+/* ================= CHAT ================= */
+
+#log {
+
+    width: 85%;
+
+    max-width: 600px;
+
+    height: 250px;
+
+    border:
+        1px solid
+        var(--border);
+
+    background:
+        var(--panel);
+
+    padding: 15px;
+
+    overflow-y: auto;
+
+    font-size: 14px;
+
+    border-radius: 6px;
+
+    margin-bottom: 15px;
+
+    backdrop-filter: blur(10px);
+}
+
+.u-line {
+
+    color: #fff;
+
+    margin-bottom: 8px;
+
+}
+
+.j-line {
+
+    color: var(--main);
+
+    margin-bottom: 14px;
+
+    font-weight: bold;
+
+}
+
+/* ================= INPUT ================= */
+
+.input-area {
+
+    display: flex;
+
+    width: 85%;
+
+    max-width: 600px;
+
+    gap: 10px;
+}
+
+input[type="text"] {
+
+    flex: 1;
+
+    background:
+        rgba(0,0,0,0.5);
+
+    border:
+        1px solid
+        var(--border);
+
+    color: #fff;
+
+    padding: 12px;
+
+    border-radius: 4px;
+
+    font-size: 14px;
+
+    outline: none;
+}
+
+button.send-btn {
+
+    background:
+        var(--main);
+
+    border: none;
+
+    color:
+        var(--button-text);
+
+    padding:
+        10px 17px;
+
+    border-radius: 4px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+button:disabled {
+    opacity: 0.5;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:650px) {
+
+    .control-panel {
+
+        top: 10px;
+        right: 10px;
+
+    }
+
+    .core {
+
+        width: 125px;
+        height: 125px;
+
+    }
+
+    #log {
+
+        width: 92%;
+        height: 230px;
+
+    }
+
+    .input-area {
+
+        width: 92%;
+
+    }
+}
+
+</style>
+</head>
+
+
+<body class="theme-jarvis">
+
+
+<!-- ================= INTERFACE ================= -->
+
+<div class="control-panel">
+
+    <label>
+        ВЫБОР ИНТЕРФЕЙСА
+    </label>
+
+    <select id="armor-select">
+
+        <option value="jarvis">
+            J.A.R.V.I.S. — СИНИЙ
+        </option>
+
+        <option value="mark1">
+            MARK I
+        </option>
+
+        <option value="mark2">
+            MARK II
+        </option>
+
+        <option value="mark3">
+            MARK III
+        </option>
+
+        <option value="mark42">
+            MARK XLII
+        </option>
+
+        <option value="mark48">
+            MARK XLVIII
+        </option>
+
+        <option value="america">
+            MARK — AMERICAN FLAG 🇺🇸
+        </option>
+
+        <option value="mark50">
+            MARK L — NANOTECH
+        </option>
+
+        <option value="mark85">
+            MARK LXXXV
+        </option>
+
+    </select>
+
+</div>
+
+
+<!-- ================= CORE ================= -->
+
+<div
+    class="core"
+    id="voice-btn"
+>
+
+    JARVIS
+
+</div>
+
+
+<div
+    class="status"
+    id="status"
+>
+
+    СИСТЕМА СВЯЗИ ГОТОВА
+
+</div>
+
+
+<!-- ================= CHAT ================= -->
+
+<div id="log">
+
+    <div class="j-line">
+
+        Джарвис:
+        Система J.A.R.V.I.S.
+        активирована, сэр.
+
+    </div>
+
+</div>
+
+
+<!-- ================= INPUT ================= -->
+
+<div class="input-area">
+
+    <input
+        type="text"
+        id="user-input"
+        placeholder="Написать Джарвису..."
+        autocomplete="off"
+    >
+
+    <button
+        class="send-btn"
+        id="send-btn"
+    >
+        ВВОД
+    </button>
+
+</div>
+
+
 <script>
 
-const status = document.getElementById("status");
-const log = document.getElementById("log");
-const userInput = document.getElementById("user-input");
-const sendBtn = document.getElementById("send-btn");
-const voiceBtn = document.getElementById("voice-btn");
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const status =
+    document.getElementById("status");
+
+const log =
+    document.getElementById("log");
+
+const userInput =
+    document.getElementById("user-input");
+
+const sendBtn =
+    document.getElementById("send-btn");
+
+const voiceBtn =
+    document.getElementById("voice-btn");
+
+const armorSelect =
+    document.getElementById("armor-select");
 
 
-// =====================================================
-// ГОЛОС JARVIS
-// =====================================================
+/* =====================================================
+   INTERFACE MEMORY
+===================================================== */
+
+const savedTheme =
+    localStorage.getItem("jarvis-theme");
+
+if (savedTheme) {
+
+    document.body.className =
+        "theme-" + savedTheme;
+
+    armorSelect.value =
+        savedTheme;
+}
+
+
+/* =====================================================
+   CHANGE INTERFACE
+===================================================== */
+
+armorSelect.addEventListener(
+    "change",
+    function() {
+
+        const theme =
+            this.value;
+
+        document.body.className =
+            "theme-" + theme;
+
+        localStorage.setItem(
+            "jarvis-theme",
+            theme
+        );
+
+    }
+);
+
+
+/* =====================================================
+   VOICE OUTPUT
+===================================================== */
 
 function speak(text) {
 
-    if (!("speechSynthesis" in window)) {
+    if (
+        !("speechSynthesis" in window)
+    ) {
         return;
     }
 
     speechSynthesis.cancel();
 
-    const speech = new SpeechSynthesisUtterance(text);
+    const speech =
+        new SpeechSynthesisUtterance(text);
 
     speech.lang = "ru-RU";
+
     speech.rate = 0.92;
+
     speech.pitch = 0.85;
+
     speech.volume = 1;
 
     speechSynthesis.speak(speech);
 }
 
 
-// =====================================================
-// СООБЩЕНИЯ
-// =====================================================
+/* =====================================================
+   ADD MESSAGE
+===================================================== */
 
 function addUserMessage(text) {
 
-    const div = document.createElement("div");
+    const div =
+        document.createElement("div");
 
     div.className = "u-line";
 
-    div.textContent = "Вы: " + text;
+    div.textContent =
+        "Вы: " + text;
 
     log.appendChild(div);
 
-    log.scrollTop = log.scrollHeight;
+    log.scrollTop =
+        log.scrollHeight;
 }
 
 
 function addJarvisMessage(text) {
 
-    const div = document.createElement("div");
+    const div =
+        document.createElement("div");
 
     div.className = "j-line";
 
-    div.textContent = "Джарвис: " + text;
+    div.textContent =
+        "Джарвис: " + text;
 
     log.appendChild(div);
 
-    log.scrollTop = log.scrollHeight;
+    log.scrollTop =
+        log.scrollHeight;
 }
 
 
-// =====================================================
-// ОТПРАВКА В ИИ
-// =====================================================
+/* =====================================================
+   SEND TO AI
+===================================================== */
 
 async function askJarvis(text) {
 
-    text = String(text || "").trim();
+    text =
+        String(text || "").trim();
 
     if (!text) {
         return;
     }
 
+
     addUserMessage(text);
+
 
     status.innerText =
         "ОБРАБОТКА ДАННЫХ ЦЕНТРАЛЬНЫМ ИНТЕЛЛЕКТОМ...";
 
+
     sendBtn.disabled = true;
+
     userInput.disabled = true;
+
 
     try {
 
-        const response = await fetch("/api/chat", {
+        const response =
+            await fetch(
+                "/api/chat",
+                {
 
-            method: "POST",
+                    method: "POST",
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
 
-            body: JSON.stringify({
-                message: text
-            })
+                    body:
+                        JSON.stringify({
+                            message: text
+                        })
 
-        });
+                }
+            );
 
 
-        const data = await response.json();
+        const data =
+            await response.json();
 
 
         if (!response.ok) {
@@ -121,21 +772,24 @@ async function askJarvis(text) {
         }
 
 
-        addJarvisMessage(data.answer);
+        addJarvisMessage(
+            data.answer
+        );
 
-        speak(data.answer);
+
+        speak(
+            data.answer
+        );
+
 
         status.innerText =
             "СИСТЕМА СВЯЗИ ГОТОВА";
 
     }
 
-    catch (error) {
+    catch(error) {
 
-        console.error(
-            "JARVIS ERROR:",
-            error
-        );
+        console.error(error);
 
         addJarvisMessage(
             "Сэр, произошла ошибка: " +
@@ -150,6 +804,7 @@ async function askJarvis(text) {
     finally {
 
         sendBtn.disabled = false;
+
         userInput.disabled = false;
 
         userInput.focus();
@@ -158,13 +813,13 @@ async function askJarvis(text) {
 }
 
 
-// =====================================================
-// ТЕКСТОВЫЙ ВВОД
-// =====================================================
+/* =====================================================
+   TEXT INPUT
+===================================================== */
 
 sendBtn.addEventListener(
     "click",
-    () => {
+    function() {
 
         const text =
             userInput.value.trim();
@@ -179,9 +834,11 @@ sendBtn.addEventListener(
 
 userInput.addEventListener(
     "keydown",
-    event => {
+    function(event) {
 
-        if (event.key === "Enter") {
+        if (
+            event.key === "Enter"
+        ) {
 
             sendBtn.click();
 
@@ -191,9 +848,9 @@ userInput.addEventListener(
 );
 
 
-// =====================================================
-// ГОЛОСОВОЙ ВВОД
-// =====================================================
+/* =====================================================
+   SPEECH RECOGNITION
+===================================================== */
 
 const SpeechRecognition =
     window.SpeechRecognition ||
@@ -204,14 +861,8 @@ let recognition = null;
 
 let listening = false;
 
-let finalTranscript = "";
+let voiceText = "";
 
-let interimTranscript = "";
-
-
-// =====================================================
-// ЕСЛИ БРАУЗЕР ПОДДЕРЖИВАЕТ МИКРОФОН
-// =====================================================
 
 if (SpeechRecognition) {
 
@@ -219,312 +870,211 @@ if (SpeechRecognition) {
         new SpeechRecognition();
 
 
-    // Русский язык
     recognition.lang =
         "ru-RU";
 
 
-    // НЕ заканчивать после каждой маленькой фразы
+    /*
+     * ВАЖНО:
+     *
+     * continuous = false
+     *
+     * Это специально.
+     * Так стабильнее на iPhone.
+     */
+
     recognition.continuous =
-        true;
+        false;
 
 
-    // Показывать промежуточный текст
     recognition.interimResults =
-        true;
+        false;
 
 
     recognition.maxAlternatives =
         1;
 
 
-    // =================================================
-    // НАЧАЛО СЛУШАНИЯ
-    // =================================================
+    /* ================================================
+       START
+    ================================================ */
 
-    recognition.onstart = () => {
+    recognition.onstart =
+        function() {
 
-        listening = true;
+            listening = true;
 
-        finalTranscript = "";
+            voiceText = "";
 
-        interimTranscript = "";
+            voiceBtn.classList.add(
+                "listening"
+            );
 
-        voiceBtn.classList.add(
-            "listening"
-        );
+            voiceBtn.innerText =
+                "СТОП";
 
-        voiceBtn.innerText =
-            "🔴 СТОП";
+            status.innerText =
+                "СЛУШАЮ ВАС, СЭР...";
 
-        status.innerText =
-            "СЛУШАЮ ВАС, СЭР...";
-
-    };
-
-
-    // =================================================
-    // ПОЛУЧЕНИЕ РЕЗУЛЬТАТА
-    // =================================================
-
-    recognition.onresult = event => {
-
-        let finalText = "";
-        let interimText = "";
+        };
 
 
-        for (
-            let i = event.resultIndex;
-            i < event.results.length;
-            i++
-        ) {
+    /* ================================================
+       RESULT
+    ================================================ */
+
+    recognition.onresult =
+        function(event) {
 
             const text =
-                event.results[i][0].transcript;
+                event
+                    .results[0][0]
+                    .transcript
+                    .trim();
 
+
+            if (text) {
+
+                voiceText = text;
+
+                status.innerText =
+                    "УСЛЫШАЛ: " + text;
+
+            }
+
+        };
+
+
+    /* ================================================
+       ERROR
+    ================================================ */
+
+    recognition.onerror =
+        function(event) {
+
+            console.error(
+                "VOICE ERROR:",
+                event.error
+            );
+
+
+            /*
+             * no-speech означает,
+             * что браузер ничего не услышал.
+             */
 
             if (
-                event.results[i].isFinal
+                event.error ===
+                "no-speech"
             ) {
 
-                finalText +=
-                    text + " ";
+                status.innerText =
+                    "Я НЕ УСЛЫШАЛ ВАС, СЭР";
+
+            }
+
+
+            else if (
+                event.error ===
+                "not-allowed"
+            ) {
+
+                status.innerText =
+                    "РАЗРЕШИТЕ ДОСТУП К МИКРОФОНУ";
+
+            }
+
+
+            else {
+
+                status.innerText =
+                    "ОШИБКА МИКРОФОНА";
+
+            }
+
+        };
+
+
+    /* ================================================
+       END
+    ================================================ */
+
+    recognition.onend =
+        function() {
+
+            listening = false;
+
+            voiceBtn.classList.remove(
+                "listening"
+            );
+
+            voiceBtn.innerText =
+                "JARVIS";
+
+
+            /*
+             * Если браузер успел
+             * распознать речь —
+             * отправляем её.
+             */
+
+            if (voiceText) {
+
+                const text =
+                    voiceText;
+
+                voiceText = "";
+
+                askJarvis(text);
 
             }
 
             else {
 
-                interimText +=
-                    text;
+                if (
+                    status.innerText ===
+                    "СЛУШАЮ ВАС, СЭР..."
+                ) {
+
+                    status.innerText =
+                        "СИСТЕМА СВЯЗИ ГОТОВА";
+
+                }
 
             }
 
-        }
+        };
 
 
-        if (finalText) {
-
-            finalTranscript +=
-                finalText;
-
-        }
-
-
-        interimTranscript =
-            interimText;
-
-
-        // Показываем пользователю,
-        // что именно услышал микрофон
-
-        status.innerText =
-            "УСЛЫШАЛ: " +
-            (
-                finalTranscript +
-                interimTranscript
-            ).trim();
-
-    };
-
-
-    // =================================================
-    // ОШИБКА
-    // =================================================
-
-    recognition.onerror = event => {
-
-        console.error(
-            "VOICE ERROR:",
-            event.error
-        );
-
-
-        // Если просто закончилось распознавание —
-        // не показываем страшную ошибку
-
-        if (
-            event.error === "no-speech"
-        ) {
-
-            status.innerText =
-                "Я НЕ УСЛЫШАЛ КОМАНДУ, СЭР";
-
-            return;
-
-        }
-
-
-        if (
-            event.error === "not-allowed"
-        ) {
-
-            status.innerText =
-                "РАЗРЕШИТЕ ДОСТУП К МИКРОФОНУ";
-
-            return;
-
-        }
-
-
-        status.innerText =
-            "ОШИБКА МИКРОФОНА: " +
-            event.error;
-
-    };
-
-
-    // =================================================
-    // КОНЕЦ РАСПОЗНАВАНИЯ
-    // =================================================
-
-    recognition.onend = () => {
-
-        console.log(
-            "Recognition ended"
-        );
-
-
-        /*
-         * ВАЖНО:
-         *
-         * Если пользователь сам нажал СТОП,
-         * отправляем накопленный текст.
-         */
-
-        if (listening) {
-
-            /*
-             * Некоторые браузеры iPhone
-             * сами останавливают recognition.
-             *
-             * Поэтому автоматически
-             * перезапускаем его.
-             */
-
-            try {
-
-                recognition.start();
-
-                return;
-
-            }
-
-            catch (e) {
-
-                console.log(
-                    "Не удалось перезапустить:",
-                    e
-                );
-
-            }
-
-        }
-
-
-        voiceBtn.classList.remove(
-            "listening"
-        );
-
-        voiceBtn.innerText =
-            "JARVIS";
-
-
-        status.innerText =
-            "СИСТЕМА СВЯЗИ ГОТОВА";
-
-    };
-
-
-    // =================================================
-    // КНОПКА JARVIS
-    // =================================================
+    /* ================================================
+       VOICE BUTTON
+    ================================================ */
 
     voiceBtn.addEventListener(
         "click",
-        () => {
+        function() {
 
-
-            // =========================================
-            // ЕСЛИ УЖЕ СЛУШАЕМ
-            // =========================================
 
             if (listening) {
 
-                listening = false;
-
-
                 /*
-                 * Сначала останавливаем микрофон.
+                 * Второе нажатие —
+                 * прекращаем слушать.
                  */
 
-                try {
-
-                    recognition.stop();
-
-                }
-
-                catch (e) {
-
-                    console.log(e);
-
-                }
-
-
-                /*
-                 * Берём всё, что услышали.
-                 */
-
-                const text =
-                    (
-                        finalTranscript +
-                        " " +
-                        interimTranscript
-                    ).trim();
-
-
-                /*
-                 * Очищаем переменные.
-                 */
-
-                finalTranscript = "";
-
-                interimTranscript = "";
-
-
-                /*
-                 * Если что-то услышали —
-                 * отправляем Джарвису.
-                 */
-
-                if (text) {
-
-                    status.innerText =
-                        "ПЕРЕДАЮ КОМАНДУ ДЖАРВИСУ...";
-
-                    askJarvis(text);
-
-                }
-
-                else {
-
-                    status.innerText =
-                        "ГОЛОС НЕ РАСПОЗНАН";
-
-                }
-
+                recognition.stop();
 
                 return;
 
             }
 
 
-            // =========================================
-            // НАЧИНАЕМ СЛУШАТЬ
-            // =========================================
+            /*
+             * Первое нажатие —
+             * начинаем слушать.
+             */
 
-            finalTranscript = "";
-
-            interimTranscript = "";
+            voiceText = "";
 
             try {
 
@@ -532,10 +1082,10 @@ if (SpeechRecognition) {
 
             }
 
-            catch (error) {
+            catch(error) {
 
                 console.error(
-                    "START ERROR:",
+                    "START VOICE ERROR:",
                     error
                 );
 
@@ -547,21 +1097,18 @@ if (SpeechRecognition) {
 }
 
 
-// =====================================================
-// БРАУЗЕР НЕ ПОДДЕРЖИВАЕТ ГОЛОС
-// =====================================================
+/* =====================================================
+   NO SPEECH SUPPORT
+===================================================== */
 
 else {
 
-    voiceBtn.innerText =
-        "🎙️ ГОЛОС НЕ ПОДДЕРЖИВАЕТСЯ";
-
-    voiceBtn.disabled =
-        true;
-
     status.innerText =
-        "ГОЛОСОВОЙ РЕЖИМ НЕДОСТУПЕН";
+        "ГОЛОСОВОЙ РЕЖИМ НЕ ПОДДЕРЖИВАЕТСЯ";
 
 }
 
 </script>
+
+</body>
+</html>
