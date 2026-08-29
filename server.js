@@ -5,7 +5,6 @@ const app = express();
 app.use(express.json());
 app.use(express.static(__dirname));
 
-// Ваш личный выделенный вечный ключ Gemini Flash, защищенный от блокировок
 const KEY = "AIzaSyCX" + "-wX3N6nS" + "U-tN_gS0" + "6U5w8eD" + "nS_8K7Xo";
 
 app.post('/api/chat', async (req, res) => {
@@ -20,8 +19,11 @@ app.post('/api/chat', async (req, res) => {
         });
         
         const data = await apiResponse.json();
-        // ПОЛНОСТЬЮ ИСПРАВЛЕННЫЙ ПУТЬ С ИНДЕКСАМИ ДЛЯ МАССИВОВ GOOGLE API:
-        const reply = data.candidates[0].content.parts[0].text;
+        // Индексы [0] прописаны через переменные, чтобы избежать сбоев отображения
+        const firstCandidate = data.candidates[0];
+        const firstPart = firstCandidate.content.parts[0];
+        const reply = firstPart.text;
+        
         res.json({ reply });
     } catch (err) {
         console.error(err);
