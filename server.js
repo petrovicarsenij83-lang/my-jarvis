@@ -33,12 +33,15 @@ app.post('/api/chat', async (req, res) => {
 
         const data = await response.json();
         
-        // Безопасное извлечение ответа БЕЗ квадратных скобок, защищённое от сбоев на iPad
-        const candidate = data.choices.at(0);
-        const messageObject = candidate.message;
-        const replyText = messageObject.content;
-        
-        res.json({ reply: replyText.trim() });
+        // Самое безопасное извлечение без индексов и сложных методов
+        if (data && data.choices) {
+            const firstChoice = data.choices;
+            const messageObject = firstChoice.message;
+            const replyText = messageObject.content;
+            res.json({ reply: replyText.trim() });
+        } else {
+            res.json({ reply: "Извините, сэр. Формат данных от ИИ изменился. Повторите попытку." });
+        }
     } catch (err) {
         console.error(err);
         res.json({ reply: "Извините, сэр. Мои спутниковые цепи связи обновляются. Повторите запрос через секунду." });
