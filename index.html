@@ -4,331 +4,1218 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>J.A.R.V.I.S.</title>
+<title>J.A.R.V.I.S. Control Panel</title>
 
 <style>
+
+:root {
+
+    --bg: #060d1a;
+    --main: #00e5ff;
+    --glow: rgba(0,229,255,0.4);
+    --panel: rgba(0,15,30,0.65);
+    --border: #00e5ff;
+    --button-text: #00151d;
+
+}
+
+/* =====================================================
+   ОСНОВНОЙ JARVIS
+===================================================== */
+
+body.theme-jarvis {
+
+    --bg: #060d1a;
+    --main: #00e5ff;
+    --glow: rgba(0,229,255,0.45);
+    --panel: rgba(0,15,30,0.65);
+    --border: #00e5ff;
+    --button-text: #00151d;
+
+}
+
+/* =====================================================
+   MARK I
+===================================================== */
+
+body.theme-mark1 {
+
+    --bg: #17120e;
+    --main: #c58b55;
+    --glow: rgba(197,139,85,0.45);
+    --panel: rgba(35,25,18,0.75);
+    --border: #c58b55;
+    --button-text: #21140b;
+
+}
+
+/* =====================================================
+   MARK II
+===================================================== */
+
+body.theme-mark2 {
+
+    --bg: #11161b;
+    --main: #dce7ed;
+    --glow: rgba(220,231,237,0.45);
+    --panel: rgba(30,35,40,0.75);
+    --border: #b9c5cc;
+    --button-text: #11161b;
+
+}
+
+/* =====================================================
+   MARK III
+===================================================== */
+
+body.theme-mark3 {
+
+    --bg: #180407;
+    --main: #ffcc36;
+    --glow: rgba(255,80,40,0.5);
+    --panel: rgba(50,5,8,0.75);
+    --border: #ff3344;
+    --button-text: #240000;
+
+}
+
+/* =====================================================
+   MARK XLII
+===================================================== */
+
+body.theme-mark42 {
+
+    --bg: #12040a;
+    --main: #ff4b3e;
+    --glow: rgba(255,65,45,0.55);
+    --panel: rgba(45,5,10,0.75);
+    --border: #ffb52e;
+    --button-text: #260300;
+
+}
+
+/* =====================================================
+   MARK XLVIII
+===================================================== */
+
+body.theme-mark48 {
+
+    --bg: #090b10;
+    --main: #d92735;
+    --glow: rgba(220,30,45,0.5);
+    --panel: rgba(20,22,28,0.8);
+    --border: #8e9aa5;
+    --button-text: #ffffff;
+
+}
+
+/* =====================================================
+   AMERICAN FLAG
+===================================================== */
+
+body.theme-america {
+
+    --bg: #050b18;
+    --main: #ffffff;
+    --glow: rgba(50,120,255,0.5);
+    --panel: rgba(5,15,35,0.8);
+    --border: #e63946;
+    --button-text: #07152e;
+
+}
+
+/* =====================================================
+   MARK L
+===================================================== */
+
+body.theme-mark50 {
+
+    --bg: #050b0d;
+    --main: #00ffcc;
+    --glow: rgba(0,255,204,0.5);
+    --panel: rgba(0,25,25,0.75);
+    --border: #ff1744;
+    --button-text: #001f1a;
+
+}
+
+/* =====================================================
+   MARK LXXXV
+===================================================== */
+
+body.theme-mark85 {
+
+    --bg: #160304;
+    --main: #ffd34e;
+    --glow: rgba(255,70,40,0.55);
+    --panel: rgba(50,4,5,0.78);
+    --border: #ff2638;
+    --button-text: #250000;
+
+}
+
+
+/* =====================================================
+   BODY
+===================================================== */
+
 * {
     box-sizing: border-box;
 }
 
 body {
-    margin: 0;
-    min-height: 100vh;
+
     background:
-        radial-gradient(circle at center, #073c78 0%, #031b46 40%, #010b20 100%);
-    color: #e9fbff;
-    font-family: Arial, Helvetica, sans-serif;
+        radial-gradient(
+            circle at center,
+            color-mix(
+                in srgb,
+                var(--main) 12%,
+                var(--bg)
+            ),
+            var(--bg) 70%
+        );
+
+    color: var(--main);
+
+    font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
 
     display: flex;
-    justify-content: center;
+
+    flex-direction: column;
+
     align-items: center;
 
-    padding: 20px;
-}
-
-.container {
-    width: min(900px, 100%);
-    text-align: center;
-}
-
-.logo {
-    width: 190px;
-    height: 190px;
-
-    margin: 0 auto 25px;
-
-    border: 3px solid #00eaff;
-    border-radius: 50%;
-
-    display: flex;
-    align-items: center;
     justify-content: center;
 
-    color: #00eaff;
-    font-size: 27px;
-    font-weight: bold;
-    letter-spacing: 7px;
+    min-height: 100vh;
 
-    box-shadow:
-        0 0 15px #00eaff,
-        0 0 40px rgba(0, 234, 255, 0.6),
-        inset 0 0 30px rgba(0, 234, 255, 0.15);
+    margin: 0;
 
-    animation: pulse 2.5s infinite;
+    overflow: hidden;
+
+    transition:
+        background 0.5s,
+        color 0.5s;
 }
 
-@keyframes pulse {
-    0%, 100% {
-        box-shadow:
-            0 0 15px #00eaff,
-            0 0 40px rgba(0, 234, 255, 0.5);
-    }
 
-    50% {
-        box-shadow:
-            0 0 25px #00eaff,
-            0 0 70px rgba(0, 234, 255, 0.8);
-    }
-}
+/* =====================================================
+   PANEL
+===================================================== */
 
-.status {
-    font-size: 18px;
-    letter-spacing: 4px;
-    margin-bottom: 25px;
-    color: #00eaff;
-}
+.control-panel {
 
-.chat {
-    height: 430px;
-    overflow-y: auto;
+    position: absolute;
 
-    padding: 25px;
+    top: 20px;
+    right: 20px;
 
-    border: 1px solid rgba(0, 234, 255, 0.5);
-    border-radius: 14px;
-
-    background: rgba(2, 15, 40, 0.65);
-
-    box-shadow:
-        0 0 25px rgba(0, 234, 255, 0.15);
-
-    text-align: left;
-}
-
-.message {
-    margin-bottom: 22px;
-    line-height: 1.5;
-    font-size: 18px;
-}
-
-.jarvis {
-    color: #00eaff;
-    font-weight: bold;
-}
-
-.user {
-    color: white;
-    font-weight: bold;
-}
-
-.system {
-    color: #ff4f91;
-    font-weight: bold;
-}
-
-.input-area {
     display: flex;
-    gap: 12px;
-    margin-top: 20px;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    background:
+        var(--panel);
+
+    padding: 12px;
+
+    border-radius: 8px;
+
+    border:
+        1px solid
+        var(--border);
+
+    box-shadow:
+        0 0 15px
+        var(--glow);
+
+    backdrop-filter:
+        blur(10px);
+
+    z-index: 10;
+
 }
 
-input {
-    flex: 1;
+.control-panel label {
 
-    padding: 18px;
+    font-size: 10px;
 
-    border-radius: 10px;
-    border: 2px solid #00eaff;
+    font-weight: bold;
 
-    background: rgba(0, 0, 0, 0.45);
-    color: white;
+    letter-spacing: 1px;
 
-    font-size: 18px;
+}
+
+select {
+
+    background: #000;
+
+    border:
+        1px solid
+        var(--border);
+
+    color: var(--main);
+
+    padding: 7px;
+
+    border-radius: 4px;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
     outline: none;
 
-    box-shadow: 0 0 15px rgba(0, 234, 255, 0.3);
+    cursor: pointer;
+
 }
 
-button {
-    padding: 0 30px;
 
-    border: none;
-    border-radius: 10px;
+/* =====================================================
+   CORE
+===================================================== */
 
-    background: #00eaff;
-    color: #00233b;
+.core {
 
-    font-size: 18px;
+    width: 145px;
+    height: 145px;
+
+    border:
+        3px solid
+        var(--main);
+
+    border-radius: 50%;
+
+    box-shadow:
+        0 0 25px var(--glow),
+        0 0 55px var(--glow);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
     font-weight: bold;
 
     cursor: pointer;
 
-    box-shadow: 0 0 20px rgba(0, 234, 255, 0.6);
+    text-shadow:
+        0 0 10px var(--main);
+
+    background:
+        rgba(255,255,255,0.015);
+
+    margin-bottom: 8px;
+
+    transition:
+        all 0.5s;
+
+    letter-spacing: 3px;
+
 }
 
-button:disabled {
-    opacity: 0.5;
-    cursor: wait;
+.core:hover {
+
+    transform:
+        scale(1.04);
+
 }
 
-@media (max-width: 600px) {
+.core.listening {
 
-    .logo {
-        width: 140px;
-        height: 140px;
-        font-size: 20px;
+    animation:
+        listeningPulse 0.9s
+        infinite alternate;
+
+    border-color:
+        #ff1744;
+
+    box-shadow:
+        0 0 30px #ff1744,
+        0 0 70px #ff1744;
+
+    color:
+        #ff1744;
+
+}
+
+@keyframes listeningPulse {
+
+    from {
+        transform: scale(1);
     }
 
-    .chat {
-        height: 400px;
+    to {
+        transform: scale(1.08);
+    }
+
+}
+
+
+/* =====================================================
+   STATUS
+===================================================== */
+
+.status {
+
+    font-size: 11px;
+
+    letter-spacing: 3px;
+
+    text-transform:
+        uppercase;
+
+    margin-bottom: 15px;
+
+    text-align: center;
+
+}
+
+
+/* =====================================================
+   CHAT
+===================================================== */
+
+#log {
+
+    width: 85%;
+
+    max-width: 600px;
+
+    height: 250px;
+
+    border:
+        1px solid
+        var(--border);
+
+    background:
+        var(--panel);
+
+    padding: 15px;
+
+    overflow-y: auto;
+
+    font-size: 14px;
+
+    border-radius: 6px;
+
+    margin-bottom: 15px;
+
+    box-shadow:
+        0 0 15px
+        rgba(0,0,0,0.25);
+
+    backdrop-filter:
+        blur(10px);
+
+}
+
+.u-line {
+
+    color: #fff;
+
+    margin-bottom: 8px;
+
+}
+
+.j-line {
+
+    color: var(--main);
+
+    margin-bottom: 14px;
+
+    font-weight: bold;
+
+}
+
+
+/* =====================================================
+   INPUT
+===================================================== */
+
+.input-area {
+
+    display: flex;
+
+    width: 85%;
+
+    max-width: 600px;
+
+    gap: 10px;
+
+}
+
+input[type="text"] {
+
+    flex: 1;
+
+    background:
+        rgba(0,0,0,0.5);
+
+    border:
+        1px solid
+        var(--border);
+
+    color: #fff;
+
+    padding: 12px;
+
+    border-radius: 4px;
+
+    font-size: 14px;
+
+    outline: none;
+
+}
+
+button.send-btn {
+
+    background:
+        var(--main);
+
+    border: none;
+
+    color:
+        var(--button-text);
+
+    padding:
+        10px 17px;
+
+    border-radius: 4px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+}
+
+
+/* =====================================================
+   VOICE
+===================================================== */
+
+.voice-hint {
+
+    margin-top: 10px;
+
+    font-size: 10px;
+
+    opacity: 0.7;
+
+    letter-spacing: 1px;
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width:650px) {
+
+    .control-panel {
+
+        top: 10px;
+
+        right: 10px;
+
+    }
+
+    .core {
+
+        width: 125px;
+
+        height: 125px;
+
+    }
+
+    #log {
+
+        width: 92%;
+
+        height: 230px;
+
     }
 
     .input-area {
-        flex-direction: column;
+
+        width: 92%;
+
     }
 
-    button {
-        height: 55px;
-    }
 }
+
 </style>
 </head>
 
-<body>
 
-<div class="container">
+<body class="theme-jarvis">
 
-    <div class="logo">
-        JARVIS
-    </div>
 
-    <div class="status" id="status">
-        СИСТЕМА СВЯЗИ ГОТОВА
-    </div>
+<!-- =====================================================
+     INTERFACE SELECTOR
+===================================================== -->
 
-    <div class="chat" id="chat">
+<div class="control-panel">
 
-        <div class="message jarvis">
-            Джарвис: Система J.A.R.V.I.S. активирована, сэр.
-            Центральный интеллект готов к работе.
-        </div>
+    <label>
+        ВЫБОР ИНТЕРФЕЙСА
+    </label>
 
-    </div>
+    <select id="armor-select">
 
-    <div class="input-area">
+        <option value="jarvis">
+            J.A.R.V.I.S. — СИНИЙ
+        </option>
 
-        <input
-            id="message"
-            type="text"
-            placeholder="Написать Джарвису..."
-            autocomplete="off"
-        >
+        <option value="mark1">
+            MARK I
+        </option>
 
-        <button id="send">
-            ВВОД
-        </button>
+        <option value="mark2">
+            MARK II
+        </option>
+
+        <option value="mark3">
+            MARK III
+        </option>
+
+        <option value="mark42">
+            MARK XLII
+        </option>
+
+        <option value="mark48">
+            MARK XLVIII
+        </option>
+
+        <option value="america">
+            MARK — AMERICAN FLAG 🇺🇸
+        </option>
+
+        <option value="mark50">
+            MARK L — NANOTECH
+        </option>
+
+        <option value="mark85">
+            MARK LXXXV
+        </option>
+
+    </select>
+
+</div>
+
+
+<!-- =====================================================
+     JARVIS CORE
+===================================================== -->
+
+<div
+    class="core"
+    id="voice-btn"
+>
+
+    JARVIS
+
+</div>
+
+
+<div
+    class="status"
+    id="status"
+>
+
+    СИСТЕМА СВЯЗИ ГОТОВА
+
+</div>
+
+
+<!-- =====================================================
+     CHAT
+===================================================== -->
+
+<div id="log">
+
+    <div class="j-line">
+
+        Джарвис:
+        Система J.A.R.V.I.S.
+        активирована, сэр.
 
     </div>
 
 </div>
 
+
+<!-- =====================================================
+     INPUT
+===================================================== -->
+
+<div class="input-area">
+
+    <input
+        type="text"
+        id="user-input"
+        placeholder="Написать Джарвису..."
+        autocomplete="off"
+    >
+
+    <button
+        class="send-btn"
+        id="send-btn"
+    >
+
+        ВВОД
+
+    </button>
+
+</div>
+
+
+<div class="voice-hint">
+
+    НАЖМИТЕ НА КРУГ И ГОВОРИТЕ С ДЖАРВИСОМ
+
+</div>
+
+
 <script>
 
-const input = document.getElementById("message");
-const button = document.getElementById("send");
-const chat = document.getElementById("chat");
-const status = document.getElementById("status");
+/* =====================================================
+   ELEMENTS
+===================================================== */
 
-function addMessage(text, type) {
+const status =
+    document.getElementById(
+        "status"
+    );
 
-    const div = document.createElement("div");
+const log =
+    document.getElementById(
+        "log"
+    );
 
-    div.className = "message " + type;
+const userInput =
+    document.getElementById(
+        "user-input"
+    );
 
-    div.textContent = text;
+const sendBtn =
+    document.getElementById(
+        "send-btn"
+    );
 
-    chat.appendChild(div);
+const voiceBtn =
+    document.getElementById(
+        "voice-btn"
+    );
 
-    chat.scrollTop = chat.scrollHeight;
+const armorSelect =
+    document.getElementById(
+        "armor-select"
+    );
+
+
+/* =====================================================
+   INTERFACE MEMORY
+===================================================== */
+
+const savedTheme =
+    localStorage.getItem(
+        "jarvis-theme"
+    );
+
+if (savedTheme) {
+
+    document.body.className =
+        "theme-" + savedTheme;
+
+    armorSelect.value =
+        savedTheme;
+
 }
 
-async function sendMessage() {
 
-    const message = input.value.trim();
+/* =====================================================
+   CHANGE INTERFACE
+===================================================== */
 
-    if (!message) return;
+armorSelect.addEventListener(
+    "change",
+    event => {
 
-    addMessage("Вы: " + message, "user");
+        const theme =
+            event.target.value;
 
-    input.value = "";
+        document.body.className =
+            "theme-" + theme;
 
-    button.disabled = true;
-    input.disabled = true;
+        localStorage.setItem(
+            "jarvis-theme",
+            theme
+        );
 
-    status.textContent = "ЦЕНТРАЛЬНЫЙ ИНТЕЛЛЕКТ ОБРАБАТЫВАЕТ ЗАПРОС...";
+    }
+);
+
+
+/* =====================================================
+   VOICE OUTPUT
+===================================================== */
+
+function speak(text) {
+
+    if (
+        !("speechSynthesis" in window)
+    ) {
+
+        return;
+
+    }
+
+    speechSynthesis.cancel();
+
+    const speech =
+        new SpeechSynthesisUtterance(
+            text
+        );
+
+    speech.lang =
+        "ru-RU";
+
+    speech.rate =
+        0.92;
+
+    speech.pitch =
+        0.85;
+
+    speech.volume =
+        1;
+
+    speechSynthesis.speak(
+        speech
+    );
+
+}
+
+
+/* =====================================================
+   ADD MESSAGE
+===================================================== */
+
+function addUserMessage(text) {
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+    div.className =
+        "u-line";
+
+    div.textContent =
+        "Вы: " + text;
+
+    log.appendChild(div);
+
+    log.scrollTop =
+        log.scrollHeight;
+
+}
+
+
+function addJarvisMessage(text) {
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+    div.className =
+        "j-line";
+
+    div.textContent =
+        "Джарвис: " + text;
+
+    log.appendChild(div);
+
+    log.scrollTop =
+        log.scrollHeight;
+
+}
+
+
+/* =====================================================
+   SEND TO AI
+===================================================== */
+
+async function askJarvis(text) {
+
+    text =
+        text.trim();
+
+    if (!text) {
+
+        return;
+
+    }
+
+
+    addUserMessage(text);
+
+
+    status.innerText =
+        "ОБРАБОТКА ДАННЫХ ЦЕНТРАЛЬНЫМ ИНТЕЛЛЕКТОМ...";
+
+
+    sendBtn.disabled =
+        true;
+
+    userInput.disabled =
+        true;
+
 
     try {
 
-        const response = await fetch("/api/chat", {
+        const response =
+            await fetch(
+                "/api/chat",
+                {
 
-            method: "POST",
+                    method:
+                        "POST",
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+                    headers: {
 
-            body: JSON.stringify({
-                message: message
-            })
+                        "Content-Type":
+                            "application/json"
 
-        });
+                    },
 
-        const data = await response.json();
+                    body:
+                        JSON.stringify({
+                            message: text
+                        })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
 
         if (!response.ok) {
 
             throw new Error(
                 data?.error ||
-                "Сервер вернул ошибку."
+                "Ошибка сервера"
             );
 
         }
+
 
         if (!data.answer) {
 
             throw new Error(
-                "ИИ не вернул ответ."
+                "ИИ не вернул ответ"
             );
 
         }
 
-        addMessage(
-            "Джарвис: " + data.answer,
-            "jarvis"
+
+        addJarvisMessage(
+            data.answer
         );
 
-        status.textContent = "СИСТЕМА СВЯЗИ ГОТОВА";
 
-    } catch (error) {
+        speak(
+            data.answer
+        );
+
+
+        status.innerText =
+            "СИСТЕМА СВЯЗИ ГОТОВА";
+
+
+    }
+
+    catch(error) {
 
         console.error(error);
 
-        addMessage(
-            "Система: Сэр, произошла ошибка соединения с центральным интеллектом: " +
-            error.message,
-            "system"
+
+        addJarvisMessage(
+            "Сэр, произошла ошибка: " +
+            error.message
         );
 
-        status.textContent = "ОШИБКА СИСТЕМЫ";
 
-    } finally {
+        status.innerText =
+            "ОШИБКА ЦЕНТРАЛЬНОГО ИНТЕЛЛЕКТА";
 
-        button.disabled = false;
-        input.disabled = false;
-
-        input.focus();
     }
+
+
+    finally {
+
+        sendBtn.disabled =
+            false;
+
+        userInput.disabled =
+            false;
+
+        userInput.focus();
+
+    }
+
 }
 
-button.addEventListener("click", sendMessage);
 
-input.addEventListener("keydown", function(event) {
+/* =====================================================
+   TEXT
+===================================================== */
 
-    if (event.key === "Enter") {
-        sendMessage();
+sendBtn.addEventListener(
+    "click",
+    () => {
+
+        const text =
+            userInput.value;
+
+        userInput.value =
+            "";
+
+        askJarvis(text);
+
     }
+);
 
-});
+
+/* =====================================================
+   ENTER
+===================================================== */
+
+userInput.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key ===
+            "Enter"
+        ) {
+
+            sendBtn.click();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   SPEECH RECOGNITION
+===================================================== */
+
+const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+
+let recognition = null;
+
+let listening = false;
+
+
+if (SpeechRecognition) {
+
+    recognition =
+        new SpeechRecognition();
+
+
+    recognition.lang =
+        "ru-RU";
+
+
+    recognition.continuous =
+        false;
+
+
+    recognition.interimResults =
+        false;
+
+
+    recognition.maxAlternatives =
+        1;
+
+
+    /* ===============================
+       START
+    =============================== */
+
+    recognition.onstart =
+        () => {
+
+            listening =
+                true;
+
+
+            voiceBtn.classList.add(
+                "listening"
+            );
+
+
+            voiceBtn.innerText =
+                "СЛУШАЮ...";
+
+
+            status.innerText =
+                "СЛУШАЮ ВАС, СЭР...";
+
+        };
+
+
+    /* ===============================
+       RESULT
+    =============================== */
+
+    recognition.onresult =
+        event => {
+
+            const result =
+                event
+                    .results[0][0]
+                    .transcript
+                    .trim();
+
+
+            if (result) {
+
+                askJarvis(
+                    result
+                );
+
+            }
+
+        };
+
+
+    /* ===============================
+       ERROR
+    =============================== */
+
+    recognition.onerror =
+        event => {
+
+            console.error(
+                "VOICE ERROR:",
+                event.error
+            );
+
+
+            if (
+                event.error ===
+                "not-allowed"
+            ) {
+
+                status.innerText =
+                    "РАЗРЕШИТЕ ДОСТУП К МИКРОФОНУ";
+
+            }
+
+            else {
+
+                status.innerText =
+                    "ГОЛОС НЕ РАСПОЗНАН";
+
+            }
+
+        };
+
+
+    /* ===============================
+       END
+    =============================== */
+
+    recognition.onend =
+        () => {
+
+            listening =
+                false;
+
+
+            voiceBtn.classList.remove(
+                "listening"
+            );
+
+
+            voiceBtn.innerText =
+                "JARVIS";
+
+
+            if (
+                status.innerText ===
+                "СЛУШАЮ ВАС, СЭР..."
+            ) {
+
+                status.innerText =
+                    "СИСТЕМА СВЯЗИ ГОТОВА";
+
+            }
+
+        };
+
+
+    /* ===============================
+       BUTTON
+    =============================== */
+
+    voiceBtn.addEventListener(
+        "click",
+        () => {
+
+            if (listening) {
+
+                recognition.stop();
+
+                return;
+
+            }
+
+
+            try {
+
+                recognition.start();
+
+            }
+
+            catch(error) {
+
+                console.error(
+                    error
+                );
+
+            }
+
+        }
+    );
+
+}
+
+else {
+
+    status.innerText =
+        "ГОЛОСОВОЙ РЕЖИМ НЕ ПОДДЕРЖИВАЕТСЯ";
+
+}
 
 </script>
 
