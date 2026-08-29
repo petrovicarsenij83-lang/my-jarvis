@@ -4,15 +4,20 @@ const app = express();
 app.use(express.json());
 app.use(express.static(__dirname));
 
-const GITHUB_TOKEN = "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";
-
 app.post('/api/chat', async (req, res) => {
     try {
+        // Сервер будет брать ключ тайно из переменных окружения Render
+        const token = process.env.AI_TOKEN;
+
+        if (!token) {
+            return res.json({ reply: "Сэр, секретный токен AI_TOKEN не обнаружен в цепях питания Render." });
+        }
+
         const response = await fetch("https://azure.com", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${GITHUB_TOKEN}`
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({
                 messages: [
@@ -28,21 +33,11 @@ app.post('/api/chat', async (req, res) => {
         });
 
         const data = await response.json();
-        console.log("Ответ от GitHub:", JSON.stringify(data));
-
-        // Всеядный нано-сканер текста ответа
-        let finalReply = "";
         
         if (data && data.choices && data.choices[0] && data.choices[0].message) {
-            const msg = data.choices[0].message;
-            finalReply = msg.content || msg.text || msg.value || "";
-        }
-
-        if (finalReply) {
-            res.json({ reply: finalReply.trim() });
+            res.json({ reply: data.choices[0].message.content.trim() });
         } else {
-            // Если ИИ прислал пустой объект, выводим его структуру прямо на экран для диагностики
-            res.json({ reply: "Сэр, зафиксирован неизвестный формат данных: " + JSON.stringify(data).substring(0, 50) });
+            res.json({ reply: "Извините, сэр. Спутник вернул пустой поток данных. Повторите попытку." });
         }
     } catch (err) {
         console.error(err);
