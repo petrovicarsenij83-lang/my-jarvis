@@ -18,8 +18,12 @@ app.post('/api/chat', async (req, res) => {
         });
         
         const data = await response.json();
-        // Ультра-короткий и стопроцентно точный путь к тексту ответа Google API
-        const reply = data.candidates[0].content.parts[0].text;
+        
+        // Код БЕЗ квадратных скобок, чтобы iPad скопировал его без потерь:
+        const candidate = data.candidates.at(0);
+        const part = candidate.content.parts.at(0);
+        const reply = part.text;
+        
         res.json({ reply });
     } catch (err) {
         console.error(err);
@@ -28,4 +32,4 @@ app.post('/api/chat', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => { console.log("Сервер активен"); });
+app.listen(PORT, () => { console.log("Сервер запущен"); });
