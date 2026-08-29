@@ -22,6 +22,11 @@
             transition: transform 0.2s;
         }
         .core:active { transform: scale(0.95); }
+        .listening { animation: pulse 1.5s infinite alternate; border-color: #ff0055; box-shadow: 0 0 40px #ff0055; text-shadow: 0 0 10px #ff0055; color: #ff0055; }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
         .status { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 15px; text-align: center; }
         #log {
             width: 85%; max-width: 500px; height: 180px;
@@ -108,6 +113,7 @@
         sendBtn.addEventListener('click', handleTextInput);
         userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleTextInput(); });
 
+        // Подключаем микрофон к кругу JARVIS
         const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (Speech) {
             const rec = new Speech();
@@ -115,16 +121,25 @@
 
             voiceBtn.addEventListener('click', () => {
                 unlockAudioiOS();
-                try { rec.start(); status.innerText = "СЛУШАЮ ВАС, СЭР..."; } catch(e) { rec.stop(); }
+                try { 
+                    rec.start(); 
+                    status.innerText = "СЛУШАЮ ВАС, СЭР..."; 
+                    voiceBtn.classList.add('listening');
+                } catch(e) { 
+                    rec.stop(); 
+                }
             });
 
             rec.onresult = (e) => {
-                const speechResult = e.results.transcript;
+                const speechResult = e.results[0][0].transcript;
                 if (speechResult) askJarvis(speechResult);
             };
 
             rec.onerror = () => { status.innerText = "ГОЛОС НЕ РАСПОЗНАН"; };
-            rec.onend = () => { if(status.innerText === "СЛУШАЮ ВАС, СЭР...") status.innerText = "СИСТЕМА СВЯЗИ ГОТОВА"; };
+            rec.onend = () => { 
+                voiceBtn.classList.remove('listening');
+                if(status.innerText === "СЛУШАЮ ВАС, СЭР...") status.innerText = "СИСТЕМА СВЯЗИ ГОТОВА"; 
+            };
         } else {
             status.innerText = "МИКРОФОН НЕ ПОДДЕРЖИВАЕТСЯ.";
         }
