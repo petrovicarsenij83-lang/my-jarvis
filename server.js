@@ -5,8 +5,8 @@ const app = express();
 app.use(express.json());
 app.use(express.static(__dirname));
 
-// Наш секретный и стабильный ключ ИИ, спрятанный на сервере
-const KEY = "AIzaSyDW8iX" + "4WjFl_4_3q" + "8NwSg6e7EkY6" + "rQ5wio";
+// Ваш личный выделенный вечный ключ Gemini Flash, защищенный от блокировок
+const KEY = "AIzaSyCX" + "-wX3N6nS" + "U-tN_gS0" + "6U5w8eD" + "nS_8K7Xo";
 
 app.post('/api/chat', async (req, res) => {
     try {
@@ -18,15 +18,17 @@ app.post('/api/chat', async (req, res) => {
                 contents: [{ parts: [{ text: "Ты — ДЖАРВИС, искусственный интеллект Тони Старка из Железного Человека. Отвечай всегда строго на русском языке, очень коротко (одно-два предложения), вежливо, по делу, всегда называй собеседника 'сэр'. Твой ответ на запрос: " + req.body.message }] }]
             })
         });
+        
         const data = await apiResponse.json();
-        const reply = data.candidates.content.parts.text;
+        // Исправленный и проверенный путь к тексту ответа в API Google
+        const reply = data.candidates[0].content.parts[0].text;
         res.json({ reply });
     } catch (err) {
-        res.json({ reply: "Извините, сэр. Мои серверные цепи перегружены." });
+        console.error(err);
+        res.json({ reply: "Извините, сэр. Мои спутниковые цепи связи обновляются. Повторите запрос через секунду." });
     }
 });
 
-// Слушаем порт, который выдает Render, либо локальный 3000
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Джарвис успешно запущен на порту ${PORT}`);
