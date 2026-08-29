@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const app = express();
+
 app.use(express.json());
 app.use(express.static(__dirname));
 
@@ -25,4 +26,8 @@ app.post('/api/chat', async (req, res) => {
     }
 });
 
-module.exports = app;
+// Слушаем порт, который выдает Render, либо локальный 3000
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Джарвис успешно запущен на порту ${PORT}`);
+});
