@@ -20,7 +20,7 @@ app.post('/api/chat', async (req, res) => {
         });
         
         const data = await apiResponse.json();
-        // Полностью исправленный путь к ответу ИИ с индексами массивов
+        // ПОЛНОСТЬЮ ИСПРАВЛЕННЫЙ ПУТЬ С ИНДЕКСАМИ ДЛЯ МАССИВОВ GOOGLE API:
         const reply = data.candidates[0].content.parts[0].text;
         res.json({ reply });
     } catch (err) {
