@@ -20,7 +20,7 @@ app.post('/api/chat', async (req, res) => {
         });
         
         const data = await apiResponse.json();
-        // Исправленный путь: получаем первый элемент из candidates и первый элемент из parts
+        // Полностью исправленный путь к ответу ИИ с индексами массивов
         const reply = data.candidates[0].content.parts[0].text;
         res.json({ reply });
     } catch (err) {
