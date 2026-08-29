@@ -3,265 +3,118 @@ const path = require("path");
 
 const app = express();
 
+app.use(express.json({ limit: "1mb" }));
+app.use(express.static(path.join(__dirname)));
+
 const PORT = process.env.PORT || 10000;
 const API_KEY = process.env.OPENROUTER_API_KEY;
 
-app.use(express.json());
-app.use(express.static(path.join(__dirname)));
+// Главная страница
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
 
-// ==============================
-// Проверка JARVIS
-// ==============================
-
+// Проверка сервера
 app.get("/api/health", (req, res) => {
-    res.json({
-        online: true,
-        apiKey: !!API_KEY,
-        ai: "OpenRouter Free"
-    });
+  res.json({
+    ok: true,
+    jarvis: "online",
+    apiKey: !!API_KEY
+  });
 });
 
-// ==============================
-// JARVIS AI
-// ==============================
-
+// Чат
 app.post("/api/chat", async (req, res) => {
+  try {
+    if (!API_KEY) {
+      return res.status(500).json({
+        error: "OPENROUTER_API_KEY не найден в Render Environment."
+      });
+    }
 
-    try {
+    const message = String(req.body?.message || "").trim();
 
-        const message = String(
-            req.body?.message || ""
-        ).trim();
+    if (!message) {
+      return res.status(400).json({
+        error: "Пустое сообщение."
+      });
+    }
 
-        if (!message) {
-            return res.status(400).json({
-                error: "Сообщение пустое."
-            });
-        }
-
-        if (!API_KEY) {
-
-            console.error(
-                "OPENROUTER_API_KEY отсутствует."
-            );
-
-            return res.status(500).json({
-                error:
-                    "OPENROUTER_API_KEY не найден в Render."
-            });
-        }
-
-        console.log(
-            "JARVIS получил:",
-            message
-        );
-
-        // ==================================
-        // OPENROUTER FREE ROUTER
-        // ==================================
-
-        const response = await fetch(
-            "https://openrouter.ai/api/v1/chat/completions",
+    const response = await fetch(
+      "https://openrouter.ai/api/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${API_KEY}`,
+          "Content-Type": "application/json",
+          "HTTP-Referer": "https://my-jarvis-assistant-2026.onrender.com",
+          "X-Title": "JARVIS Assistant"
+        },
+        body: JSON.stringify({
+          model: "openrouter/free",
+          messages: [
             {
-                method: "POST",
-
-                headers: {
-                    "Authorization":
-                        `Bearer ${API_KEY}`,
-
-                    "Content-Type":
-                        "application/json",
-
-                    "HTTP-Referer":
-                        "https://my-jarvis-assistant-2026.onrender.com",
-
-                    "X-Title":
-                        "J.A.R.V.I.S. Assistant"
-                },
-
-                body: JSON.stringify({
-
-                    // ВАЖНО:
-                    // автоматически выбирает
-                    // доступную БЕСПЛАТНУЮ модель
-                    model: "openrouter/free",
-
-                    messages: [
-
-                        {
-                            role: "system",
-
-                            content:
-                                `
-Ты J.A.R.V.I.S. — персональный
-искусственный интеллект пользователя.
-
-Отвечай только на русском языке.
-
-Твой стиль:
-- умный;
-- спокойный;
-- дружелюбный;
-- естественный;
-- уверенный.
-
-Иногда обращайся к пользователю
-"сэр".
-
-Отвечай по существу и не делай
-ответы unnecessarily длинными.
-
-Ты являешься центральным
-интеллектом системы J.A.R.V.I.S.
-`
-                        },
-
-                        {
-                            role: "user",
-
-                            content:
-                                message
-                        }
-
-                    ],
-
-                    temperature: 0.7,
-
-                    max_tokens: 700
-                })
+              role: "system",
+              content:
+                "Ты JARVIS — персональный голосовой и текстовый помощник. " +
+                "Отвечай на русском языке, понятно, дружелюбно и без лишней воды. " +
+                "Обращайся к пользователю как к сэру."
+            },
+            {
+              role: "user",
+              content: message
             }
-        );
+          ],
+          temperature: 0.7,
+          max_tokens: 1000
+        })
+      }
+    );
 
-        console.log(
-            "OpenRouter HTTP:",
-            response.status
-        );
+    const data = await response.json();
 
-        const raw =
-            await response.text();
+    console.log("OpenRouter status:", response.status);
+    console.log("OpenRouter response:", JSON.stringify(data));
 
-        let data;
-
-        try {
-
-            data = JSON.parse(raw);
-
-        } catch {
-
-            console.error(
-                "OpenRouter вернул:",
-                raw
-            );
-
-            return res.status(502).json({
-                error:
-                    "OpenRouter вернул неправильный ответ."
-            });
-        }
-
-        // ==============================
-        // Ошибка OpenRouter
-        // ==============================
-
-        if (!response.ok) {
-
-            console.error(
-                "OpenRouter ERROR:",
-                data
-            );
-
-            return res.status(502).json({
-
-                error:
-                    data?.error?.message ||
-                    "Ошибка бесплатной модели OpenRouter."
-            });
-        }
-
-        // ==============================
-        // Получаем ответ
-        // ==============================
-
-        const answer =
-            data?.choices?.[0]?.message?.content;
-
-        if (!answer) {
-
-            console.error(
-                "Пустой ответ:",
-                data
-            );
-
-            return res.status(502).json({
-                error:
-                    "Бесплатная модель не вернула ответ."
-            });
-        }
-
-        console.log(
-            "JARVIS ответил:",
-            answer
-        );
-
-        return res.json({
-            answer: answer.trim()
-        });
-
+    if (!response.ok) {
+      return res.status(response.status).json({
+        error:
+          data?.error?.message ||
+          data?.error ||
+          `OpenRouter HTTP ${response.status}`
+      });
     }
 
-    catch (error) {
+    const answer =
+      data?.choices?.[0]?.message?.content ||
+      data?.choices?.[0]?.text ||
+      "";
 
-        console.error(
-            "JARVIS SERVER ERROR:",
-            error
-        );
-
-        return res.status(500).json({
-
-            error:
-                "Ошибка соединения с центральным интеллектом."
-        });
+    if (!answer || !answer.trim()) {
+      return res.status(502).json({
+        error: "ИИ не вернул текстовый ответ.",
+        details: data
+      });
     }
+
+    res.json({
+      answer: answer.trim()
+    });
+
+  } catch (error) {
+    console.error("CHAT ERROR:", error);
+
+    res.status(500).json({
+      error: error.message || "Ошибка соединения с центральным интеллектом."
+    });
+  }
 });
 
-// ==============================
-// Запуск
-// ==============================
-
-app.listen(
-    PORT,
-    "0.0.0.0",
-    () => {
-
-        console.log(
-            "================================"
-        );
-
-        console.log(
-            "       J.A.R.V.I.S. ONLINE"
-        );
-
-        console.log(
-            "================================"
-        );
-
-        console.log(
-            "PORT:",
-            PORT
-        );
-
-        console.log(
-            "AI:",
-            "OpenRouter FREE"
-        );
-
-        console.log(
-            "MODEL:",
-            "openrouter/free"
-        );
-
-        console.log(
-            "================================"
-        );
-    }
-);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log("=================================");
+  console.log("      J.A.R.V.I.S. ONLINE");
+  console.log("=================================");
+  console.log("PORT:", PORT);
+  console.log("OpenRouter:", API_KEY ? "API KEY FOUND" : "API KEY MISSING");
+  console.log("=================================");
+});
