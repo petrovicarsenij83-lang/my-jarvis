@@ -95,6 +95,13 @@ let history = [];
 let currentAudio = null, pendingAudio = null, audioUnlocked = false;
 
 function unlockAudio() {
+  try {
+    if ("speechSynthesis" in window) {
+      const u = new SpeechSynthesisUtterance(" ");
+      u.volume = 0;
+      speechSynthesis.speak(u);
+    }
+  } catch (e) {}
   if (audioUnlocked) return;
   try {
     const a = new Audio();
