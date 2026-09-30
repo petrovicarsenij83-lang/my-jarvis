@@ -108,6 +108,20 @@ try {
   console.error("TTS MODULE ERROR:", e);
 }
 
+// Запасная озвучка (бесплатная, проще по звучанию), если Microsoft не отвечает
+async function googleTTS(text, tl) {
+  const chunks = text.match(/[^.!?\n]{1,180}(?:[.!?\n]+|$)/g) || [text.slice(0, 180)];
+  const bufs = [];
+  for (const c of chunks.map(x => x.trim()).filter(Boolean).slice(0, 8)) {
+    const url = "https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=" + tl + "&q=" + encodeURIComponent(c);
+    const r = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0" }, signal: AbortSignal.timeout(8000) });
+    if (!r.ok) throw new Error("Google TTS HTTP " + r.status);
+    bufs.push(Buffer.from(await r.arrayBuffer()));
+  }
+  if (!bufs.length) throw new Error("Google TTS empty");
+  return Buffer.concat(bufs);
+}
+
 function pickVoice(text) {
   if (/[а-яё]/i.test(text)) return { voice: "ru-RU-DmitryNeural", lang: "ru-RU" };
   return { voice: "en-US-AndrewMultilingualNeural", lang: "en-US" };
@@ -132,9 +146,14 @@ app.post("/api/tts", async (req, res) => {
       outputFormat: "audio-24khz-48kbitrate-mono-mp3",
       timeout: 15000
     });
-    await tts.ttsPromise(text, tempFile);
-
-    const audio = fs.readFileSync(tempFile);
+    let audio;
+    try {
+      await tts.ttsPromise(text, tempFile);
+      audio = fs.readFileSync(tempFile);
+    } catch (e) {
+      console.error("EDGE TTS FAILED, using Google fallback:", e && e.message);
+      audio = await googleTTS(text, v.lang.slice(0, 2));
+    }
     res.set({ "Content-Type": "audio/mpeg", "Content-Length": audio.length, "Cache-Control": "no-store" });
     res.send(audio);
   } catch (e) {
