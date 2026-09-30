@@ -9,6 +9,33 @@ app.use(express.static(path.join(__dirname)));
 
 const PORT = process.env.PORT || 10000;
 const API_KEY = process.env.OPENROUTER_API_KEY;
+const TAVILY_KEY = process.env.TAVILY_API_KEY;
+
+// Нужен ли поиск в интернете для этого вопроса
+const SEARCH_RE = /новост|сегодня|сейчас|погод|курс|цен[аы]|стоимост|последн|свеж|недавн|кто такой|кто сейчас|когда выйд|результат|счёт|счет|матч|выбор|президент|акци|биткоин|bitcoin|news|today|latest|current|weather|price|score|recent|who is|release|stock|right now|20(2[4-9]|3\d)/i;
+
+async function webSearch(query) {
+  if (!TAVILY_KEY) return "";
+  try {
+    const r = await fetch("https://api.tavily.com/search", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${TAVILY_KEY}` },
+      body: JSON.stringify({ query, max_results: 4, search_depth: "basic", include_answer: true }),
+      signal: AbortSignal.timeout(8000)
+    });
+    if (!r.ok) { console.error("SEARCH HTTP", r.status); return ""; }
+    const d = await r.json();
+    const parts = [];
+    if (d.answer) parts.push("Краткий ответ: " + d.answer);
+    for (const x of (d.results || []).slice(0, 4)) {
+      parts.push(`- ${x.title}: ${String(x.content || "").slice(0, 400)}`);
+    }
+    return parts.join("\n");
+  } catch (e) {
+    console.error("SEARCH ERROR:", e.message);
+    return "";
+  }
+}
 
 const SYSTEM_PROMPT =
   "Ты JARVIS — персональный ИИ. ВСЕГДА отвечай на том же языке, на котором написано последнее сообщение пользователя (русский, английский, украинский и т.д.). " +
@@ -17,7 +44,7 @@ const SYSTEM_PROMPT =
   "Отвечай кратко, если не просят подробно. Пиши простым текстом без markdown и эмодзи.";
 
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "index.html")));
-app.get("/api/health", (req, res) => res.json({ ok: true, openrouter: !!API_KEY }));
+app.get("/api/health", (req, res) => res.json({ ok: true, openrouter: !!API_KEY, search: !!TAVILY_KEY }));
 
 async function askAI(messages) {
   let lastErr;
@@ -56,8 +83,15 @@ app.post("/api/chat", async (req, res) => {
       ? req.body.history.slice(-10).filter(m => ["user", "assistant"].includes(m?.role) && typeof m.content === "string")
       : [];
 
+    let extra = "";
+    if (SEARCH_RE.test(message)) {
+      const found = await webSearch(message);
+      if (found) extra = "\n\nСвежие данные из интернета (используй их для ответа, не упоминай слово «поиск»):\n" + found;
+    }
+    const today = new Date().toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" });
+
     const answer = await askAI([
-      { role: "system", content: SYSTEM_PROMPT },
+      { role: "system", content: SYSTEM_PROMPT + ` Сегодня ${today}.` + extra },
       ...history,
       { role: "user", content: message }
     ]);
@@ -97,9 +131,6 @@ app.post("/api/tts", async (req, res) => {
       voice: v.voice,
       lang: v.lang,
       outputFormat: "audio-24khz-48kbitrate-mono-mp3",
-      rate: "+0%",
-      pitch: "+0Hz",
-      volume: "+0%",
       timeout: 15000
     });
     await tts.ttsPromise(text, tempFile);
