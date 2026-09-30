@@ -143,8 +143,24 @@ async function speak(text) {
     }
   } catch (e) {
     voiceBtn.classList.remove("speaking");
-    status.innerText = String(e.message).startsWith("ГОЛОС") ? e.message : "ГОЛОС: ОШИБКА ЗАПРОСА";
+    browserSpeak(text);
   }
+}
+
+/* Запасной голос: встроенный в браузер, если серверный недоступен */
+function browserSpeak(text) {
+  if (!("speechSynthesis" in window)) { status.innerText = READY; return; }
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text.replace(/[*_`#]/g, ""));
+    const ru = /[а-яё]/i.test(text);
+    u.lang = ru ? "ru-RU" : "en-US";
+    const v = speechSynthesis.getVoices().find(x => x.lang && x.lang.startsWith(ru ? "ru" : "en"));
+    if (v) u.voice = v;
+    u.onstart = () => { voiceBtn.classList.add("speaking"); status.innerText = "ДЖАРВИС ГОВОРИТ, СЭР..."; };
+    u.onend = u.onerror = () => { voiceBtn.classList.remove("speaking"); status.innerText = READY; };
+    speechSynthesis.speak(u);
+  } catch (e) { status.innerText = READY; }
 }
 
 /* CHAT */
