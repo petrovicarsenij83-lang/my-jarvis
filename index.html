@@ -53,7 +53,6 @@ button:disabled{opacity:.5}
   <select id="lang-select">
     <option value="ru-RU">Русский</option>
     <option value="en-US">English</option>
-    <option value="uk-UA">Українська</option>
   </select>
 </div>
 
@@ -93,7 +92,7 @@ langSelect.addEventListener("change", () => store("jarvis-lang", langSelect.valu
 let history = [];
 
 /* AUDIO */
-let currentAudio = null, audioUnlocked = false;
+let currentAudio = null, pendingAudio = null, audioUnlocked = false;
 
 function unlockAudio() {
   if (audioUnlocked) return;
@@ -121,7 +120,7 @@ async function speak(text) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text })
     });
-    if (!r.ok) throw new Error("tts");
+    if (!r.ok) throw new Error("ГОЛОС: ОШИБКА СЕРВЕРА " + r.status);
     const blob = await r.blob();
     if (blob.size < 100) throw new Error("empty");
     const url = URL.createObjectURL(blob);
@@ -135,10 +134,16 @@ async function speak(text) {
     };
     audio.onended = () => done(READY);
     audio.onerror = () => done("ОШИБКА ВОСПРОИЗВЕДЕНИЯ");
-    await audio.play();
+    try {
+      await audio.play();
+    } catch (e) {
+      pendingAudio = audio;
+      voiceBtn.classList.remove("speaking");
+      status.innerText = "НАЖМИТЕ НА КРУГ, ЧТОБЫ ПРОСЛУШАТЬ ОТВЕТ";
+    }
   } catch (e) {
     voiceBtn.classList.remove("speaking");
-    status.innerText = "ГОЛОС НЕДОСТУПЕН, ОТВЕТ В ТЕКСТЕ";
+    status.innerText = String(e.message).startsWith("ГОЛОС") ? e.message : "ГОЛОС: ОШИБКА ЗАПРОСА";
   }
 }
 
@@ -222,6 +227,13 @@ if (SR) {
   };
   voiceBtn.addEventListener("click", () => {
     unlockAudio();
+    if (pendingAudio) {
+      const a = pendingAudio; pendingAudio = null; currentAudio = a;
+      voiceBtn.classList.add("speaking");
+      a.onended = () => { voiceBtn.classList.remove("speaking"); status.innerText = READY; };
+      a.play().catch(() => { voiceBtn.classList.remove("speaking"); });
+      return;
+    }
     stopSpeaking();
     if (listening) { recognition.stop(); return; }
     recognition.lang = langSelect.value;
