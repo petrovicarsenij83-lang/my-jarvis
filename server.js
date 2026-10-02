@@ -46,9 +46,17 @@ const SYSTEM_PROMPT =
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "index.html")));
 app.get("/api/health", (req, res) => res.json({ ok: true, openrouter: !!API_KEY, search: !!TAVILY_KEY }));
 
+// Бесплатные модели по порядку: если одна не ответила, пробуем следующую
+const MODELS = [
+  "nvidia/nemotron-3-ultra-550b-a55b:free",
+  "google/gemma-4-31b-it:free",
+  "poolside/laguna-s-2.1:free",
+  "openrouter/free"
+];
+
 async function askAI(messages) {
   let lastErr;
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < MODELS.length; i++) {
     try {
       const r = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: "POST",
@@ -58,7 +66,7 @@ async function askAI(messages) {
           "HTTP-Referer": "https://my-jarvis-assistant-2026.onrender.com",
           "X-Title": "JARVIS Assistant"
         },
-        body: JSON.stringify({ model: "openrouter/free", messages, temperature: 0.7, max_tokens: 1000 })
+        body: JSON.stringify({ model: MODELS[i], messages, temperature: 0.7, max_tokens: 1000 })
       });
       const data = await r.json().catch(() => ({}));
       const answer = data?.choices?.[0]?.message?.content?.trim();
@@ -67,7 +75,8 @@ async function askAI(messages) {
     } catch (e) {
       lastErr = e.message;
     }
-    await new Promise(r => setTimeout(r, 1000 * (i + 1)));
+    console.error("MODEL FAILED:", MODELS[i], lastErr);
+    await new Promise(r => setTimeout(r, 500));
   }
   console.error("AI FAILED:", lastErr);
   throw new Error("AI_FAILED");
